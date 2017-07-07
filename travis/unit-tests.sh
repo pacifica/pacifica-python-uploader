@@ -1,7 +1,7 @@
 #!/bin/bash
 export POSTGRES_ENV_POSTGRES_USER=postgres
 export POSTGRES_ENV_POSTGRES_PASSWORD=
-coverage run --include='metadata/*' -m pytest -v
+coverage run --include='metadata/*' --include='uploader/*' --include='bundler/*' -m pytest -v
 coverage report --show-missing --fail-under 100
 if [[ $CODECLIMATE_REPO_TOKEN ]] ; then
   codeclimate-test-reporter
