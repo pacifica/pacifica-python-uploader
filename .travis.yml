@@ -7,6 +7,14 @@ language: python
 python:
  - 2.7
 
+addons:
+  apt:
+    sources:
+      - elasticsearch-5.x
+    packages:
+      - elasticsearch
+      - oracle-java8-set-default
+
 matrix:
   include:
     - python: 2.7
