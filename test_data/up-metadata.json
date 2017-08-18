@@ -85,10 +85,10 @@
   {
     "destinationTable": "TransactionKeyValue",
     "diplayFormat": "%(first_name)s %(last_name)s",
-    "displayTitle": "EMSL User",
+    "displayTitle": "Institution User",
     "displayType": "select",
     "key": "User of Record",
-    "metaID": "EmslUserOfRecord",
+    "metaID": "InstUserOfRecord",
     "queryDependency": {
       "proposal_id": "ProposalByInstrument"
     },

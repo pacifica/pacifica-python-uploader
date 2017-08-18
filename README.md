@@ -16,7 +16,8 @@ This object must encode into JSON compatible with the ingest service.
 
 The `MetaData()` object is the upperlevel object storing all the required upload and
 file metadata. This object is currently a child of `list` to allow for easy integration
-with other python objects.
+with other python objects. Additions to the `list` methods have been made to index off
+the `metaID` attribute in the `MetaObj` class.
 
 ### MetaObj Object
 
@@ -47,3 +48,44 @@ filled with `MetaObj()` and `FileObj()` objects. The method returns the resultin
 The `metadata_encode()` method encodes a `MetaData()` object with a number of
 `MetaObj()` and `FileObj()` objects into a JSON string. The method returns the
 resulting JSON string.
+
+## Json
+
+The `Json` module encapsulates the JSON parsing logic into a common library.
+This module contains the general generators for creating `json.Encoder` and
+`json.Decoder` child classes.
+
+### NamedTuple Encoders and Decoders
+
+The `generate_namedtuple_encoder` and `generate_namedtuple_decoder` methods
+return `json.Encoder` and `json.Decoder` child classes, respectively. These
+classes encode or decode a child class of `collections.namedtuple`.
+
+## Policy
+
+This module contains all the logic to generate and execute queiries against
+the Pacifica Policy service.
+
+### PolicyQueryData
+
+This `namedtuple` contains the data required to generate a valid Policy
+service query.
+
+### PolicyQuery
+
+This object contains a `PolicyQueryData` object, mangles the object to send
+it to the Policy service. This object also has logic to pull the endpoint for
+the Policy service from the environment or constructor keyword arguments.
+Another requirement for this object is to return the results from a query to
+the calling object.
+
+## MetaUpdate
+
+This module has all the `MetaData` update code for determining parents and
+children to update when values get updated.
+
+### MetaUpdate
+
+The `MetaUpdate` class inherits from the `MetaData` class and provides methods
+for querying the policy server to get results from the metadata and update
+those results in the `MetaData` object.

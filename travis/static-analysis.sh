@@ -1,4 +1,4 @@
 #!/bin/bash
-pylint --rcfile=pylintrc uploader bundler metadata
-pylint --rcfile=pylintrc setup.py
+pre-commit run --all-files
+pylint --rcfile=pylintrc uploader bundler metadata *.py
 radon cc uploader bundler metadata
