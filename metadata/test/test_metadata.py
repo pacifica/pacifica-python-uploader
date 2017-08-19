@@ -1,7 +1,9 @@
 #!/usr/bin/python
 """Test the metadata module."""
+import json
 from unittest import TestCase
 from metadata import MetaData, MetaObj, metadata_encode, metadata_decode, FileObj
+from metadata.MetaData import FileObjEncoder
 
 
 class TestMetaData(TestCase):
@@ -24,6 +26,21 @@ class TestMetaData(TestCase):
         md_obj = MetaData([MetaObj(destinationTable='blarg')])
         meta_str = metadata_encode(md_obj)
         self.assertTrue(meta_str == '[{"destinationTable": "blarg"}]')
+
+    def test_encoding_with_error(self):
+        """Test the metadata encoding with error."""
+        hit_exception = False
+        try:
+            json.dumps(complex('1+2j'), cls=FileObjEncoder)
+        except TypeError:
+            hit_exception = True
+        self.assertTrue(hit_exception)
+
+    def test_encoding_with_files(self):
+        """Test the metadata encoding with simple example."""
+        md_obj = MetaData([FileObj(destinationTable='Files')])
+        meta_str = metadata_encode(md_obj)
+        self.assertTrue(meta_str == '[{"destinationTable": "Files"}]')
 
     def test_md_setitem(self):
         """Test the delete features of MetaData."""

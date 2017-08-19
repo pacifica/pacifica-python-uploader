@@ -69,3 +69,4 @@ class TestMetaUpdate(TestCase):
         md_update.update_parents('ProposalDirectory')
         self.assertTrue(md_update['ProposalByInstrument'].value)
         self.assertEqual(md_update['ProposalDirectory'].value, u'1234a')
+        self.assertTrue(md_update.is_valid())

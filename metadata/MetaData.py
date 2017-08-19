@@ -89,6 +89,10 @@ class MetaData(list):
         if getattr(value, 'metaID', False):
             self._meta_index_map[value.metaID] = key
 
+    def is_valid(self):
+        """Return true if all the values of MetaObjs are something."""
+        return set([bool(obj.value) for obj in self if isinstance(obj, MetaObj)]) == set([True])
+
 
 META_KEYS = [
     'sourceTable',
@@ -133,6 +137,7 @@ def file_or_meta_obj(**json_data):
 
 
 MetaObjEncoder = generate_namedtuple_encoder(MetaObj)
+FileObjEncoder = generate_namedtuple_encoder(FileObj)
 MetaObjDecoder = generate_namedtuple_decoder(file_or_meta_obj)
 
 
@@ -144,7 +149,10 @@ class MetaDataEncoder(json.JSONEncoder):
         if isinstance(o, MetaData):
             json_parts = []
             for mobj in o:
-                json_parts.append(json.loads(json.dumps(mobj, cls=MetaObjEncoder)))
+                if not hasattr(mobj, 'destinationTable'):
+                    return json.JSONEncoder.default(self, o)
+                encoder_class = FileObjEncoder if mobj.destinationTable == 'Files' else MetaObjEncoder
+                json_parts.append(json.loads(json.dumps(mobj, cls=encoder_class)))
             return json.dumps(json_parts)
         return json.JSONEncoder.default(self, o)
 

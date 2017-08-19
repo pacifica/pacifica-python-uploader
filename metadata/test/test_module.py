@@ -9,6 +9,7 @@ class TestModule(TestCase):
 
     def test_module(self):
         """Test the metadata module for interface."""
+        self.assertTrue(metadata.MetaUpdate)
         self.assertTrue(metadata.MetaData)
         self.assertTrue(metadata.MetaObj)
         self.assertTrue(metadata.metadata_encode)
