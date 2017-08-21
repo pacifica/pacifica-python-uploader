@@ -49,29 +49,29 @@ The `metadata_encode()` method encodes a `MetaData()` object with a number of
 `MetaObj()` and `FileObj()` objects into a JSON string. The method returns the
 resulting JSON string.
 
-## Json
+### Json
 
 The `Json` module encapsulates the JSON parsing logic into a common library.
 This module contains the general generators for creating `json.Encoder` and
 `json.Decoder` child classes.
 
-### NamedTuple Encoders and Decoders
+#### NamedTuple Encoders and Decoders
 
 The `generate_namedtuple_encoder` and `generate_namedtuple_decoder` methods
 return `json.Encoder` and `json.Decoder` child classes, respectively. These
 classes encode or decode a child class of `collections.namedtuple`.
 
-## Policy
+### Policy
 
 This module contains all the logic to generate and execute queiries against
 the Pacifica Policy service.
 
-### PolicyQueryData
+#### PolicyQueryData
 
 This `namedtuple` contains the data required to generate a valid Policy
 service query.
 
-### PolicyQuery
+#### PolicyQuery
 
 This object contains a `PolicyQueryData` object, mangles the object to send
 it to the Policy service. This object also has logic to pull the endpoint for
@@ -79,13 +79,41 @@ the Policy service from the environment or constructor keyword arguments.
 Another requirement for this object is to return the results from a query to
 the calling object.
 
-## MetaUpdate
+### MetaUpdate
 
 This module has all the `MetaData` update code for determining parents and
 children to update when values get updated.
 
-### MetaUpdate
+#### MetaUpdate
 
 The `MetaUpdate` class inherits from the `MetaData` class and provides methods
 for querying the policy server to get results from the metadata and update
 those results in the `MetaData` object.
+
+## Bundler
+
+This module defines a streaming bundler that allows one to stream the data and
+metadata to a file descriptor. The file descriptor is open for write binary
+and provides a single pass over the data files provided.
+
+### Bundler
+
+The `Bundler` class provides a method called `stream()` to send the bundle to
+a file descriptor. The class is created using an array of hashes that define
+the arguments to `tarfile.TarFile.gettarinfo()`. However, the `arcname` argument
+is required. The `stream()` method is blocking. However, it does have a callback
+argument that sets up a thread to get percent complete from the stream thread
+as it's processing.
+
+## Uploader
+
+This module provides the basic upload functionality to interface with the
+ingest service.
+
+### Uploader
+
+The `Uploader` class provides the interface for handling connections to the
+ingest service. There are two methods `upload()` and `getstate()`. The
+`upload()` method takes a file like object open for read binary and returns
+a job_id for that upload. The `getstate()` method takes a job_id and returns
+a json object as defined by the ingest API for getting job status.

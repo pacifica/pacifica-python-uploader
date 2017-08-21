@@ -1,10 +1,9 @@
 #!/usr/bin/python
 """This is the module for quering the Policy service."""
-from os import getenv
 import json
 from collections import namedtuple
-import requests
 from metadata.Json import generate_namedtuple_encoder, generate_namedtuple_decoder, strip_obj
+from common import CommonBase
 
 QUERY_KEYS = [
     'user',
@@ -17,7 +16,7 @@ PolicyQueryData = namedtuple('PolicyQueryData', QUERY_KEYS)
 PolicyQueryData.__new__.__defaults__ = (None,) * len(PolicyQueryData._fields)
 
 
-class PolicyQuery(object):
+class PolicyQuery(CommonBase):
     """
     Handle quering the policy server.
 
@@ -45,25 +44,21 @@ class PolicyQuery(object):
         """Get the user id."""
         return self.user_id
 
-    def _set_server_url(self, kwargs):
-        """Set server url parts from kwargs or ENV if they aren't set."""
-        parts = [
-            ('port', 8181),
-            ('addr', '127.0.0.1'),
-            ('path', '/uploader'),
-            ('url', None)
-        ]
-        for part, default in parts:
-            attr_name = '_{}'.format(part)
-            setattr(self, attr_name, kwargs.get(part))
-            if not getattr(self, attr_name):
-                setattr(self, attr_name, getenv('POLICY{}'.format(attr_name.upper()), default))
-        if not self._url:
-            self._url = 'http://{}:{}{}'.format(self._addr, self._port, self._path)
-
     def __init__(self, user, *args, **kwargs):
         """Set the policy server url and define any data for the query."""
-        self._set_server_url(kwargs)
+        self._server_url(
+            [
+                ('port', 8181),
+                ('addr', '127.0.0.1'),
+                ('path', '/uploader'),
+                ('url', None)
+            ],
+            'POLICY',
+            kwargs
+        )
+        self._setup_requests_session()
+        if not self._url:
+            self._url = 'http://{}:{}{}'.format(self._addr, self._port, self._path)
         self._auth = kwargs.get('auth', {})
         # global sential value for userid
         if user != -1:
@@ -88,7 +83,7 @@ class PolicyQuery(object):
         """Get results from the Policy server for the query."""
         headers = {'content-type': 'application/json'}
         print self.tojson()
-        reply = requests.post(self._url, headers=headers, data=self.tojson(), **self._auth)
+        reply = self.session.post(self._url, headers=headers, data=self.tojson(), **self._auth)
         return json.loads(reply.content)
 
 

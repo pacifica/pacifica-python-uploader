@@ -88,6 +88,15 @@ class Bundler(object):
         notifythread.start()
         return notifythread
 
+    @staticmethod
+    def _strip_subdir(fname):
+        """Remove the data subdir from the file path."""
+        parts = fname.split('/')  # this is posix tar standard
+        if parts[0] == 'data':
+            del parts[0]
+        parts = [x for x in parts if x]
+        return '/'.join(parts)  # this is also posix tar standard
+
     def _build_file_info(self, file_data, hashsum):
         """Build the FileObj to and return it."""
         file_path = file_data['name']
@@ -100,7 +109,7 @@ class Bundler(object):
             'mtime': datetime.utcfromtimestamp(int(path.getmtime(file_path))).isoformat(),
             'ctime': datetime.utcfromtimestamp(int(path.getctime(file_path))).isoformat(),
             'destinationTable': 'Files',
-            'subdir': path.dirname(arc_path),
+            'subdir': self._strip_subdir(path.dirname(arc_path)),
             'hashtype': self._hashstr,
             'hashsum': hashsum
         }
@@ -125,8 +134,11 @@ class Bundler(object):
             fileobj = HashFileObj(open(file_data['name']), self._hashfunc(), self)
             tarfile.addfile(tarinfo, fileobj)
             self.md_obj.append(self._build_file_info(file_data, fileobj.hashdigest()))
-        md_fd = StringIO(metadata_encode(self.md_obj))
-        tarfile.addfile(TarInfo('metadata.json'), md_fd)
+        md_txt = metadata_encode(self.md_obj)
+        md_fd = StringIO(md_txt)
+        md_tinfo = TarInfo('metadata.txt')
+        md_tinfo.size = len(md_txt)
+        tarfile.addfile(md_tinfo, md_fd)
         tarfile.close()
         self._complete = True
 

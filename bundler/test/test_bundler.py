@@ -1,9 +1,11 @@
 #!/usr/bin/python
 """Test the bundler module."""
+from json import loads
 from os import unlink
 from unittest import TestCase
 from random import randint
 from tempfile import NamedTemporaryFile
+from tarfile import TarFile
 import bundler
 from metadata import MetaData, MetaObj
 
@@ -25,7 +27,7 @@ class BuildSampleData(object):
             temp_i.close()
             self.files.append({
                 'fileobj': open(temp_i.name, 'r'),
-                'arcname': 'data_{}/{}.txt'.format(file_i, file_i),
+                'arcname': 'data/data_{}/{}.txt'.format(file_i, file_i),
                 'name': temp_i.name
             })
         return self.files
@@ -48,10 +50,16 @@ class TestBundlerModule(TestCase):
         """Test the bundler to stream a tarfile."""
         with BuildSampleData() as sample_files:
             md_obj = MetaData([MetaObj(value='SomethingReal')])
-            bundle_fd = NamedTemporaryFile()
+            bundle_fd = NamedTemporaryFile(delete=False)
             bundle = bundler.Bundler(md_obj, sample_files)
             bundle.stream(bundle_fd)
+            bundle_fd.close()
             self.assertTrue(bundle_fd)
+        check_tar = TarFile(bundle_fd.name, 'r')
+        md_fd = check_tar.extractfile('metadata.txt')
+        self.assertTrue(md_fd)
+        self.assertTrue(loads(md_fd.read()))
+        unlink(bundle_fd.name)
 
     def test_bundler_basic_with_cb(self):
         """Test the bundler to stream a tarfile."""
