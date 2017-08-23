@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """Uploader module send the data to the ingest service."""
-from common import CommonBase
+from pacifica.uploader.common import CommonBase
 
 
 class Uploader(CommonBase):
