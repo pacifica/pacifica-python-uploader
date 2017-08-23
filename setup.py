@@ -11,5 +11,10 @@ setup(name='PacificaUploader',
       description='Pacifica Uploader',
       author='David Brown',
       author_email='david.brown@pnnl.gov',
-      packages=['pacifica'],
+      packages=[
+          'pacifica.uploader.bundler',
+          'pacifica.uploader.common',
+          'pacifica.uploader.metadata',
+          'pacifica.uploader.uploader'
+      ],
       install_requires=[str(ir.req) for ir in INSTALL_REQS])
