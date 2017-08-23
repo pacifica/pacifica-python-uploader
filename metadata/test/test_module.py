@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Test the metadata module."""
 from unittest import TestCase
-import pacifica.uploader.metadata as metadata
+import metadata
 
 
 class TestModule(TestCase):

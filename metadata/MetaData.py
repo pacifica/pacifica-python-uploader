@@ -2,7 +2,7 @@
 """MetaData class to handle input and output of metadata format."""
 import json
 from collections import namedtuple
-from pacifica.uploader.metadata.Json import generate_namedtuple_encoder, generate_namedtuple_decoder
+from metadata.Json import generate_namedtuple_encoder, generate_namedtuple_decoder
 
 
 class MetaData(list):

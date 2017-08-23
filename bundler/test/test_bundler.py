@@ -6,8 +6,8 @@ from unittest import TestCase
 from random import randint
 from tempfile import NamedTemporaryFile
 from tarfile import TarFile
-import pacifica.uploader.bundler as bundler
-from pacifica.uploader.metadata import MetaData, MetaObj
+import bundler
+from metadata import MetaData, MetaObj
 
 
 # pylint: disable=too-few-public-methods

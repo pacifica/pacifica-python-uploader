@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Module used to update MetaData objects."""
-from pacifica.uploader.metadata.MetaData import MetaData
-from pacifica.uploader.metadata.PolicyQuery import PolicyQuery
+from metadata.MetaData import MetaData
+from metadata.PolicyQuery import PolicyQuery
 
 
 class MetaUpdate(MetaData):

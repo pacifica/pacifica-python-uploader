@@ -2,8 +2,8 @@
 """This is the module for quering the Policy service."""
 import json
 from collections import namedtuple
-from pacifica.uploader.metadata.Json import generate_namedtuple_encoder, generate_namedtuple_decoder, strip_obj
-from pacifica.uploader.common import CommonBase
+from metadata.Json import generate_namedtuple_encoder, generate_namedtuple_decoder, strip_obj
+from common import CommonBase
 
 QUERY_KEYS = [
     'user',

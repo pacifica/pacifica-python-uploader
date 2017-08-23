@@ -8,7 +8,7 @@ import hashlib
 from tarfile import TarFile, TarInfo
 from datetime import datetime
 from mimetypes import guess_type
-from pacifica.uploader.metadata import FileObj, metadata_encode
+from metadata import FileObj, metadata_encode
 
 
 class HashFileObj(object):

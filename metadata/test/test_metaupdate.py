@@ -1,8 +1,8 @@
 #!/usr/bin/python
 """Module used to test the MetaUpdate module."""
 from unittest import TestCase
-from pacifica.uploader.metadata.MetaUpdate import MetaUpdate
-from pacifica.uploader.metadata.MetaData import MetaObj
+from metadata.MetaUpdate import MetaUpdate
+from metadata.MetaData import MetaObj
 
 
 class TestMetaUpdate(TestCase):

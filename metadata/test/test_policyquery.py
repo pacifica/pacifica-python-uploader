@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Test the metadata module."""
 from unittest import TestCase
-from pacifica.uploader.metadata.PolicyQuery import PolicyQuery
+from metadata.PolicyQuery import PolicyQuery
 
 
 class TestPolicyQuery(TestCase):
