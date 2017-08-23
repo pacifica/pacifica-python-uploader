@@ -2,8 +2,8 @@
 """Test the metadata module."""
 import json
 from unittest import TestCase
-from metadata import MetaData, MetaObj, metadata_encode, metadata_decode, FileObj
-from metadata.MetaData import FileObjEncoder
+from .. import MetaData, MetaObj, metadata_encode, metadata_decode, FileObj
+from ..MetaData import FileObjEncoder
 
 
 class TestMetaData(TestCase):

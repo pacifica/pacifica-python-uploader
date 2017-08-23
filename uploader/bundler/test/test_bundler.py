@@ -1,13 +1,14 @@
 #!/usr/bin/python
 """Test the bundler module."""
+from __future__ import absolute_import
 from json import loads
 from os import unlink
 from unittest import TestCase
 from random import randint
 from tempfile import NamedTemporaryFile
 from tarfile import TarFile
-import bundler
-from metadata import MetaData, MetaObj
+from ... import bundler
+from ...metadata import MetaData, MetaObj
 
 
 # pylint: disable=too-few-public-methods

@@ -1,13 +1,14 @@
 #!/usr/bin/python
 """Test the uploader module."""
+from __future__ import absolute_import
 from os import unlink
 from time import sleep
 from unittest import TestCase
 from tempfile import NamedTemporaryFile
-import uploader
-import bundler
-from bundler.test.test_bundler import BuildSampleData
-from metadata import MetaData, MetaObj
+from .. import Uploader
+from .. import bundler
+from ..bundler.test.test_bundler import BuildSampleData
+from ..metadata import MetaData, MetaObj
 
 
 class TestUploader(TestCase):
@@ -15,12 +16,11 @@ class TestUploader(TestCase):
 
     def test_uploader_module(self):
         """Test the uploader stuff."""
-        self.assertTrue(uploader)
-        self.assertTrue(uploader.Uploader)
+        self.assertTrue(Uploader)
 
     def test_uploader(self):
         """Test the uploader class."""
-        up_obj = uploader.Uploader()
+        up_obj = Uploader()
         self.assertTrue(up_obj)
 
     def test_upload_basic(self):
@@ -38,7 +38,7 @@ class TestUploader(TestCase):
             bundle = bundler.Bundler(md_obj, sample_files)
             bundle.stream(bundle_fd)
             bundle_fd.close()
-            up_obj = uploader.Uploader()
+            up_obj = Uploader()
             rbundle_fd = open(bundle_fd.name, 'r')
             job_id = up_obj.upload(rbundle_fd)
             self.assertTrue(job_id)

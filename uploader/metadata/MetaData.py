@@ -1,8 +1,9 @@
 #!/usr/bin/python
 """MetaData class to handle input and output of metadata format."""
+from __future__ import absolute_import
 import json
 from collections import namedtuple
-from metadata.Json import generate_namedtuple_encoder, generate_namedtuple_decoder
+from .Json import generate_namedtuple_encoder, generate_namedtuple_decoder
 
 
 class MetaData(list):

@@ -1,9 +1,10 @@
 #!/usr/bin/python
 """This is the module for quering the Policy service."""
+from __future__ import absolute_import
 import json
 from collections import namedtuple
-from metadata.Json import generate_namedtuple_encoder, generate_namedtuple_decoder, strip_obj
-from common import CommonBase
+from .Json import generate_namedtuple_encoder, generate_namedtuple_decoder, strip_obj
+from ..common import CommonBase
 
 QUERY_KEYS = [
     'user',

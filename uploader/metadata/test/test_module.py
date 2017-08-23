@@ -1,7 +1,8 @@
 #!/usr/bin/python
 """Test the metadata module."""
+from __future__ import absolute_import
 from unittest import TestCase
-import metadata
+from ... import metadata
 
 
 class TestModule(TestCase):

@@ -1,7 +1,8 @@
 #!/usr/bin/python
 """Module used to update MetaData objects."""
-from metadata.MetaData import MetaData
-from metadata.PolicyQuery import PolicyQuery
+from __future__ import absolute_import
+from .MetaData import MetaData
+from .PolicyQuery import PolicyQuery
 
 
 class MetaUpdate(MetaData):
