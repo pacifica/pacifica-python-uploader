@@ -16,7 +16,7 @@ class TestPolicyQuery(TestCase):
     def test_pq_json(self):
         """Test converting the PolicyQuery to json."""
         policyquery = PolicyQuery('dmlb2001')
-        self.assertEqual(policyquery.tojson(), '{"user": 10}')
+        self.assertEqual(policyquery.tojson(), '{"user": 10, "columns": null, "where": null, "from": null}')
 
     def test_pq_fromjson(self):
         """Test JSON to the PolicyQuery object."""

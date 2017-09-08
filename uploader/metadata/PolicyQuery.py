@@ -3,7 +3,7 @@
 from __future__ import absolute_import
 import json
 from collections import namedtuple
-from .Json import generate_namedtuple_encoder, generate_namedtuple_decoder, strip_obj
+from .Json import generate_namedtuple_encoder, generate_namedtuple_decoder
 from ..common import CommonBase
 
 QUERY_KEYS = [
@@ -38,7 +38,13 @@ class PolicyQuery(CommonBase):
         try:
             self.user_id = int(user)
         except ValueError:
-            id_check = PolicyQuery(user=-1, columns=['_id'], from_table='users', where={'network_id': user})
+            id_check = PolicyQuery(
+                user=-1,
+                columns=['_id'],
+                from_table='users',
+                where={'network_id': user},
+                auth=self._auth
+            )
             self.user_id = id_check.get_results()[0]['_id']
 
     def get_user(self):
@@ -83,7 +89,6 @@ class PolicyQuery(CommonBase):
     def get_results(self):
         """Get results from the Policy server for the query."""
         headers = {'content-type': 'application/json'}
-        print self.tojson()
         reply = self.session.post(self._url, headers=headers, data=self.tojson(), **self._auth)
         return json.loads(reply.content)
 
@@ -95,7 +100,6 @@ class PolicyQuery(CommonBase):
 def _mangle_encode(obj):
     """Move the from_table to just from."""
     obj['from'] = obj.pop('from_table')
-    strip_obj(obj)
 
 
 def _mangle_decode(**json_data):
