@@ -60,7 +60,7 @@ class PolicyQuery(CommonBase):
         self._setup_requests_session()
         if not self._url:
             self._url = 'http://{}:{}{}'.format(self._addr, self._port, self._path)
-        self._auth = kwargs.get('auth', {})
+        self._auth = kwargs.pop('auth', {})
         # global sential value for userid
         if user != -1:
             self.set_user(user)

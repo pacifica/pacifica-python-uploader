@@ -10,6 +10,7 @@ class MetaUpdate(MetaData):
 
     def __init__(self, user, *args, **kwargs):
         """Pull the user from the arguments so we can use that for policy queries."""
+        self._auth = kwargs.pop('auth', {})
         super(MetaUpdate, self).__init__(*args, **kwargs)
         self._user = user
 
@@ -22,7 +23,8 @@ class MetaUpdate(MetaData):
             user=self._user,
             columns=self[meta_id].queryFields,
             from_table=self[meta_id].sourceTable,
-            where=where_clause
+            where=where_clause,
+            auth=self._auth
         )
         return pq_obj.get_results()
 

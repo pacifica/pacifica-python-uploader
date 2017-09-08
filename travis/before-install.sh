@@ -6,7 +6,7 @@ if [ -z "$RUN_LINTS" ]; then
   mysql -e 'CREATE DATABASE pacifica_ingest;'
   export POSTGRES_ENV_POSTGRES_USER=postgres
   export POSTGRES_ENV_POSTGRES_PASSWORD=
-  export MYSQL_ENV_MYSQL_USER=travis
+  export MYSQL_ENV_MYSQL_USER=root
   export MYSQL_ENV_MYSQL_PASSWORD=
   archiveinterfaceserver.py --config travis/config.cfg &
   echo $! > archiveinterface.pid
@@ -20,6 +20,13 @@ if [ -z "$RUN_LINTS" ]; then
   celery -A ingest.backend worker --loglevel=info &
   echo $! > ingestd.pid
   popd
+  MAX_TRIES=60
+  HTTP_CODE=$(curl -sL -w "%{http_code}\\n" 'localhost:8066/get_state?job_id=42' -o /dev/null || true)
+  while [[ $HTTP_CODE != 404 && $MAX_TRIES > 0 ]] ; do
+    sleep 1
+    HTTP_CODE=$(curl -sL -w "%{http_code}\\n" 'localhost:8066/get_state?job_id=42' -o /dev/null || true)
+    MAX_TRIES=$(( MAX_TRIES - 1 ))
+  done
   MAX_TRIES=60
   HTTP_CODE=$(curl -sL -w "%{http_code}\\n" localhost:8121/keys -o /dev/null || true)
   while [[ $HTTP_CODE != 200 && $MAX_TRIES > 0 ]] ; do
