@@ -28,14 +28,21 @@ class MetaUpdate(MetaData):
         )
         return pq_obj.get_results()
 
-    def update_parents(self, meta_id):
-        """Update the parents of the meta_id."""
+    def dependent_meta_id(self, meta_id):
+        """Get the dependent meta ID."""
         meta = self[meta_id]
+        ret = []
         for dep_meta_id in meta.queryDependency.values():
             if meta_id != dep_meta_id:
-                self.update_parents(dep_meta_id)
+                ret.append(dep_meta_id)
+        return ret
 
-        meta = meta._replace(query_results=self.query_results(meta_id))
+    def update_parents(self, meta_id):
+        """Update the parents of the meta_id."""
+        for dep_meta_id in self.dependent_meta_id(meta_id):
+            self.update_parents(dep_meta_id)
+
+        meta = self[meta_id]._replace(query_results=self.query_results(meta_id))
         self[meta_id] = meta
 
         if not meta.value:
