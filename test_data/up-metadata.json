@@ -1,7 +1,7 @@
 [
   {
     "destinationTable": "Transactions.submitter",
-    "diplayFormat": "%(first_name)s %(last_name)s",
+    "displayFormat": "%(first_name)s %(last_name)s",
     "displayTitle": "Currently Logged On",
     "displayType": "logged_on",
     "metaID": "logon",
@@ -19,7 +19,7 @@
   },
   {
     "destinationTable": "Transactions.instrument",
-    "diplayFormat": "%(_id)s %(name_short)s - %(display_name)s",
+    "displayFormat": "%(_id)s %(name_short)s - %(display_name)s",
     "displayTitle": "Instrument",
     "displayType": "select",
     "metaID": "instrumentByID",
@@ -36,8 +36,8 @@
     "valueField": "_id"
   },
   {
-    "diplayFormat": "%(name_short)s",
     "directoryOrder": 1,
+    "displayFormat": "%(name_short)s",
     "displayType": "directoryTree",
     "metaID": "instrumentDirectory",
     "queryDependency": {
@@ -52,7 +52,7 @@
   },
   {
     "destinationTable": "Transactions.proposal",
-    "diplayFormat": "%(_id)s %(title)s",
+    "displayFormat": "%(_id)s %(title)s",
     "displayTitle": "Proposal",
     "displayType": "select",
     "metaID": "ProposalByInstrument",
@@ -68,8 +68,8 @@
     "valueField": "_id"
   },
   {
-    "diplayFormat": "Dave is a twit %(_id)s",
     "directoryOrder": 0,
+    "displayFormat": "Dave is a twit %(_id)s",
     "displayType": "directoryTree",
     "metaID": "ProposalDirectory",
     "queryDependency": {
@@ -84,7 +84,7 @@
   },
   {
     "destinationTable": "TransactionKeyValue",
-    "diplayFormat": "%(first_name)s %(last_name)s",
+    "displayFormat": "%(first_name)s %(last_name)s",
     "displayTitle": "Institution User",
     "displayType": "select",
     "key": "User of Record",

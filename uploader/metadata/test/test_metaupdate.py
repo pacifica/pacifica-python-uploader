@@ -14,7 +14,7 @@ class TestMetaUpdate(TestCase):
         md_update.append(
             MetaObj(
                 destinationTable='Transactions.submitter',
-                diplayFormat='%(first_name)s %(last_name)s',
+                displayFormat='%(first_name)s %(last_name)s',
                 displayTitle='Currently Logged On',
                 displayType='logged_on',
                 metaID='logon',
@@ -28,7 +28,7 @@ class TestMetaUpdate(TestCase):
         md_update.append(
             MetaObj(
                 destinationTable='Transactions.instrument',
-                diplayFormat='%(_id)s %(name_short)s - %(display_name)s',
+                displayFormat='%(_id)s %(name_short)s - %(display_name)s',
                 displayTitle='Instrument',
                 displayType='select',
                 metaID='instrumentByID',
@@ -42,7 +42,7 @@ class TestMetaUpdate(TestCase):
         md_update.append(
             MetaObj(
                 destinationTable='Transactions.proposal',
-                diplayFormat='%(_id)s %(title)s',
+                displayFormat='%(_id)s %(title)s',
                 displayTitle='Proposal',
                 displayType='select',
                 metaID='ProposalByInstrument',
@@ -55,7 +55,7 @@ class TestMetaUpdate(TestCase):
         )
         md_update.append(
             MetaObj(
-                diplayFormat='Proposal %(_id)s',
+                displayFormat='Proposal %(_id)s',
                 directoryOrder=0,
                 displayType='directoryTree',
                 metaID='ProposalDirectory',

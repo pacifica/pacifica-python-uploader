@@ -104,7 +104,7 @@ META_KEYS = [
     'queryDependency',
     'valueField',
     'queryFields',
-    'diplayFormat',
+    'displayFormat',
     'key',
     'value',
     'directoryOrder',
