@@ -45,6 +45,6 @@ class MetaUpdate(MetaData):
         meta = self[meta_id]._replace(query_results=self.query_results(meta_id))
         self[meta_id] = meta
 
-        if not meta.value:
+        if meta.query_results and not meta.value:
             meta = meta._replace(value=meta.query_results[0]['_id'])
             self[meta_id] = meta
