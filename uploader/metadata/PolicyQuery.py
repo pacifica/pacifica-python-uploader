@@ -2,10 +2,12 @@
 """This is the module for quering the Policy service."""
 from __future__ import absolute_import
 import json
+import logging
 from collections import namedtuple
 from .Json import generate_namedtuple_encoder, generate_namedtuple_decoder
 from ..common import CommonBase
 
+LOGGER = logging.getLogger(__name__)
 QUERY_KEYS = [
     'user',
     'columns',
@@ -67,6 +69,7 @@ class PolicyQuery(CommonBase):
         if not self._url:
             self._url = 'http://{}:{}{}'.format(self._addr, self._port, self._path)
         self._auth = kwargs.pop('auth', {})
+        LOGGER.debug('Policy URL %s auth %s', self._url, self._auth)
         # global sential value for userid
         if user != -1:
             self.set_user(user)
@@ -89,8 +92,10 @@ class PolicyQuery(CommonBase):
     def get_results(self):
         """Get results from the Policy server for the query."""
         headers = {'content-type': 'application/json'}
+        LOGGER.debug('Policy Query %s', self.tojson())
         reply = self.session.post(self._url, headers=headers, data=self.tojson(), **self._auth)
-        return json.loads(reply.content)
+        LOGGER.debug('Policy Result %s', reply.content)
+        return reply.json()
 
 
 #####################################################################

@@ -1,6 +1,10 @@
 #!/usr/bin/python
 """Uploader module send the data to the ingest service."""
+import logging
 from .common import CommonBase
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Uploader(CommonBase):
@@ -34,14 +38,18 @@ class Uploader(CommonBase):
         if not self._status_url:
             self._status_url = 'http://{}:{}{}'.format(self._addr, self._port, self._status_path)
         self._auth = kwargs.get('auth', {})
+        LOGGER.debug('Upload URL %s auth %s', self._upload_url, self._auth)
+        LOGGER.debug('Status URL %s auth %s', self._status_url, self._auth)
 
     def upload(self, read_fd):
         """Upload the data from a file like object."""
         headers = {'content-type': 'application/octet-stream'}
         resp = self.session.post(self._upload_url, data=read_fd, headers=headers)
+        LOGGER.debug('Upload Resp %s', resp.json())
         return resp.json()['job_id']
 
     def getstate(self, job_id):
         """Get the ingest state for a job."""
         resp = self.session.get('{}?job_id={}'.format(self._status_url, job_id))
+        LOGGER.debug('Status Resp %s', resp.json())
         return resp.json()
