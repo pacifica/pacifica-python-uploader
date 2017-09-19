@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Test the uploader module."""
 from __future__ import absolute_import
-from os import unlink
+from os import unlink, stat
 from time import sleep
 from unittest import TestCase
 from tempfile import NamedTemporaryFile
@@ -38,9 +38,10 @@ class TestUploader(TestCase):
             bundle = bundler.Bundler(md_obj, sample_files)
             bundle.stream(bundle_fd)
             bundle_fd.close()
+            bundle_size = stat(bundle_fd.name).st_size
             up_obj = Uploader()
             rbundle_fd = open(bundle_fd.name, 'r')
-            job_id = up_obj.upload(rbundle_fd)
+            job_id = up_obj.upload(rbundle_fd, content_length=bundle_size)
             self.assertTrue(job_id)
             status = up_obj.getstate(job_id)
 

@@ -41,9 +41,11 @@ class Uploader(CommonBase):
         LOGGER.debug('Upload URL %s auth %s', self._upload_url, self._auth)
         LOGGER.debug('Status URL %s auth %s', self._status_url, self._auth)
 
-    def upload(self, read_fd):
+    def upload(self, read_fd, content_length=None):
         """Upload the data from a file like object."""
         headers = {'content-type': 'application/octet-stream'}
+        if content_length:
+            headers['content-length'] = str(content_length)
         resp = self.session.post(self._upload_url, data=read_fd, headers=headers)
         LOGGER.debug('Upload Resp %s', resp.json())
         return resp.json()['job_id']
