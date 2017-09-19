@@ -131,7 +131,7 @@ class Bundler(object):
         tarfile = TarFile(None, 'w', fileobj)
         for file_data in self.file_data:
             tarinfo = tarfile.gettarinfo(**file_data)
-            fileobj = HashFileObj(open(file_data['name']), self._hashfunc(), self)
+            fileobj = HashFileObj(file_data.get('fileobj', open(file_data['name'])), self._hashfunc(), self)
             tarfile.addfile(tarinfo, fileobj)
             self.md_obj.append(self._build_file_info(file_data, fileobj.hashdigest()))
         md_txt = metadata_encode(self.md_obj)
