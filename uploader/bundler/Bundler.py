@@ -44,13 +44,16 @@ class Bundler(object):
         Constructor of the bundler class.
 
         Add the MetaData object `md_obj` and file `file_data` to create.
-        The `file_data` object should be a list of hashes.
+        The `file_data` object should be a list of hashes. That are fed
+        to TarInfo objects except for fileobj which is passed to addfile
+        method.
         ```
         [
             {
-                'name': 'local file path',
-                'arcname': 'file path in the bundle',
-                'recursive': 'True or False for directories'
+                'name': 'archive file path',
+                'fileobj': 'open file object for read',
+                'size': 'size of the file',
+                'mtime': 'modify time of the file'
             },
         ...
         ]
@@ -73,7 +76,7 @@ class Bundler(object):
         """Build the total size from the files and save the total."""
         tsize = 0
         for file_data in self.file_data:
-            tsize += path.getsize(file_data['name'])
+            tsize += file_data['size']
         self._total_size = tsize
 
     def _setup_notify_thread(self, callback, sleeptime=5):
@@ -99,21 +102,30 @@ class Bundler(object):
 
     def _build_file_info(self, file_data, hashsum):
         """Build the FileObj to and return it."""
-        file_path = file_data['name']
-        arc_path = file_data['arcname']
-        mime_type = guess_type(file_path, strict=True)[0]
+        arc_path = file_data['name']
+        mime_type = guess_type(arc_path, strict=True)[0]
+        file_time = datetime.utcfromtimestamp(int(file_data['mtime'])).isoformat()
         info = {
-            'size': path.getsize(file_path),
+            'size': file_data['size'],
             'mimetype': mime_type if mime_type is not None else 'application/octet-stream',
             'name': path.basename(arc_path),
-            'mtime': datetime.utcfromtimestamp(int(path.getmtime(file_path))).isoformat(),
-            'ctime': datetime.utcfromtimestamp(int(path.getctime(file_path))).isoformat(),
+            'mtime': file_time,
+            'ctime': file_time,
             'destinationTable': 'Files',
             'subdir': self._strip_subdir(path.dirname(arc_path)),
             'hashtype': self._hashstr,
             'hashsum': hashsum
         }
         return FileObj(**info)
+
+    def _tarinfo_from_file_data(self, file_data):
+        """Return a tarinfo object from file_data."""
+        tarinfo = TarInfo(file_data['name'])
+        fileobj = file_data.pop('fileobj', None)
+        for key, value in file_data.items():
+            setattr(tarinfo, key, value)
+        fileobj = HashFileObj(fileobj, self._hashfunc(), self)
+        return tarinfo, fileobj
 
     def stream(self, fileobj, callback=None, sleeptime=5):
         """
@@ -130,8 +142,7 @@ class Bundler(object):
 
         tarfile = TarFile(None, 'w', fileobj)
         for file_data in self.file_data:
-            tarinfo = tarfile.gettarinfo(**file_data)
-            fileobj = HashFileObj(file_data.get('fileobj', open(file_data['name'])), self._hashfunc(), self)
+            tarinfo, fileobj = self._tarinfo_from_file_data(file_data)
             tarfile.addfile(tarinfo, fileobj)
             self.md_obj.append(self._build_file_info(file_data, fileobj.hashdigest()))
         md_txt = metadata_encode(self.md_obj)

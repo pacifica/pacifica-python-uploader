@@ -2,7 +2,7 @@
 """Test the bundler module."""
 from __future__ import absolute_import
 from json import loads
-from os import unlink
+from os import unlink, stat
 from unittest import TestCase
 from random import randint
 from tempfile import NamedTemporaryFile
@@ -18,6 +18,7 @@ class BuildSampleData(object):
     def __init__(self):
         """The the constructor for the object."""
         self.files = []
+        self.names = []
 
     def __enter__(self):
         """Create a set of temporary files to build a bundle."""
@@ -26,17 +27,19 @@ class BuildSampleData(object):
             temp_i = NamedTemporaryFile(delete=False)
             temp_i.write('This is the content of {}\n'.format(file_i))
             temp_i.close()
+            self.names.append(temp_i.name)
             self.files.append({
                 'fileobj': open(temp_i.name, 'r'),
-                'arcname': 'data/data_{}/{}.txt'.format(file_i, file_i),
-                'name': temp_i.name
+                'name': 'data/data_{}/{}.txt'.format(file_i, file_i),
+                'size': stat(temp_i.name).st_size,
+                'mtime': stat(temp_i.name).st_mtime
             })
         return self.files
 
     def __exit__(self, _exc_type, value, traceback):
         """Delete the temporary files."""
-        for file_data in self.files:
-            unlink(file_data['fileobj'].name)
+        for fname in self.names:
+            unlink(fname)
 # pylint: enable=too-few-public-methods
 
 
