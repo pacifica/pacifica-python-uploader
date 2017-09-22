@@ -5,7 +5,8 @@ from StringIO import StringIO
 import threading
 from time import sleep
 import hashlib
-from tarfile import TarFile, TarInfo
+from tarfile import TarInfo
+from tarfile import open as taropen
 from datetime import datetime
 from mimetypes import guess_type
 from ..metadata import FileObj, metadata_encode
@@ -140,7 +141,7 @@ class Bundler(object):
             self._save_total_size()
             notifythread = self._setup_notify_thread(callback, sleeptime)
 
-        tarfile = TarFile(None, 'w', fileobj)
+        tarfile = taropen(None, 'w|', fileobj)
         for file_data in self.file_data:
             tarinfo, fileobj = self._tarinfo_from_file_data(file_data)
             tarfile.addfile(tarinfo, fileobj)
