@@ -58,6 +58,5 @@ class MetaUpdate(MetaData):
         dirs = []
         for md_obj in sorted(dir_md_objs, key=lambda x: x.directoryOrder):
             format_hash = md_obj.query_results[0]
-            print format_hash
             dirs.append(md_obj.displayFormat.format(**format_hash))
         return '/'.join(dirs)
