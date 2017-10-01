@@ -46,12 +46,12 @@ class Uploader(CommonBase):
         headers = {'content-type': 'application/octet-stream'}
         if content_length:
             headers['content-length'] = str(content_length)
-        resp = self.session.post(self._upload_url, data=read_fd, headers=headers)
+        resp = self.session.post(self._upload_url, data=read_fd, headers=headers, **self._auth)
         LOGGER.debug('Upload Resp %s', resp.json())
         return resp.json()['job_id']
 
     def getstate(self, job_id):
         """Get the ingest state for a job."""
-        resp = self.session.get('{}?job_id={}'.format(self._status_url, job_id))
+        resp = self.session.get('{}?job_id={}'.format(self._status_url, job_id), **self._auth)
         LOGGER.debug('Status Resp %s', resp.json())
         return resp.json()
