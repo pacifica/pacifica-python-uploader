@@ -89,10 +89,10 @@ class TestMetaUpdate(TestCase):
         )
         md_update.append(
             MetaObj(
-                displayFormat='Proposal %(_id)s',
+                displayFormat=u'Proposal ID {_id}',
                 directoryOrder=0,
                 displayType='directoryTree',
-                metaID='ProposalDirectory',
+                metaID='ProposalIDDirectory',
                 queryDependency={'_id': 'ProposalByInstrument'},
                 queryFields=['_id'],
                 sourceTable='proposals',
@@ -100,7 +100,25 @@ class TestMetaUpdate(TestCase):
                 valueField='_id'
             )
         )
-        md_update.update_parents('ProposalDirectory')
+        md_update.append(
+            MetaObj(
+                displayFormat=u'Proposal Title ({title})',
+                directoryOrder=1,
+                displayType='directoryTree',
+                metaID='ProposalTitleDirectory',
+                queryDependency={'_id': 'ProposalByInstrument'},
+                queryFields=['_id', 'title'],
+                sourceTable='proposals',
+                value=None,
+                valueField='_id'
+            )
+        )
+        md_update.update_parents('ProposalIDDirectory')
+        md_update.update_parents('ProposalTitleDirectory')
         self.assertTrue(md_update['ProposalByInstrument'].value)
-        self.assertEqual(md_update['ProposalDirectory'].value, u'1234a')
+        self.assertEqual(md_update['ProposalIDDirectory'].value, u'1234a')
+        self.assertEqual(
+            md_update.directory_prefix(),
+            u'Proposal ID 1234a/Proposal Title (Pacifica D\xe9velopment (active no close))'
+        )
         self.assertTrue(md_update.is_valid())

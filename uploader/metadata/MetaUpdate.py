@@ -48,3 +48,16 @@ class MetaUpdate(MetaData):
         if meta.query_results and not meta.value:
             meta = meta._replace(value=meta.query_results[0][meta.valueField])
             self[meta_id] = meta
+
+    def directory_prefix(self):
+        """Return the directory prefix of the MetaObjs which have directoryOrder."""
+        dir_md_objs = []
+        for md_obj in self:
+            if md_obj.directoryOrder is not None:
+                dir_md_objs.append(md_obj)
+        dirs = []
+        for md_obj in sorted(dir_md_objs, key=lambda x: x.directoryOrder):
+            format_hash = md_obj.query_results[0]
+            print format_hash
+            dirs.append(md_obj.displayFormat.format(**format_hash))
+        return '/'.join(dirs)
