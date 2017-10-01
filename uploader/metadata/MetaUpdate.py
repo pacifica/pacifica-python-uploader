@@ -14,6 +14,10 @@ class MetaUpdate(MetaData):
         super(MetaUpdate, self).__init__(*args, **kwargs)
         self._user = user
 
+    def get_auth(self):
+        """Return the auth object to be used by other instances."""
+        return self._auth
+
     def query_results(self, meta_id):
         """Build a PolicyQuery out of the meta_id."""
         where_clause = {}

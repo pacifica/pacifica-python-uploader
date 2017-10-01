@@ -42,6 +42,11 @@ class TestMetaUpdate(TestCase):
         md_update.update_parents('instrumentByID')
         self.assertFalse(md_update[1].value)
 
+    def test_auth_accessor(self):
+        """Get the auth from the md_update to verify defaults."""
+        md_update = MetaUpdate('bjohn')
+        self.assertEqual(md_update.get_auth(), {})
+
     def test_update_parents(self):
         """Test the MetaUpdate update_parents method."""
         md_update = MetaUpdate('dmlb2001')
