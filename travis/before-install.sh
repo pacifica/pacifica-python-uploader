@@ -1,5 +1,6 @@
 #!/bin/bash -xe
 if [ -z "$RUN_LINTS" ]; then
+  pip install --upgrade six
   pip install -r requirements-dev.txt
   psql -c 'create database pacifica_metadata;' -U postgres
   mysql -e 'CREATE DATABASE pacifica_uniqueid;'
@@ -10,7 +11,9 @@ if [ -z "$RUN_LINTS" ]; then
   export MYSQL_ENV_MYSQL_PASSWORD=
   archiveinterfaceserver.py --config travis/config.cfg &
   echo $! > archiveinterface.pid
+  pushd travis/uniqueid
   UniqueIDServer.py &
+  popd
   pushd travis/metadata
   MetadataServer.py &
   popd
