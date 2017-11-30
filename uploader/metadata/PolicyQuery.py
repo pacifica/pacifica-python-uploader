@@ -5,6 +5,7 @@ import json
 import logging
 from collections import namedtuple
 from .Json import generate_namedtuple_encoder, generate_namedtuple_decoder
+from .MetaData import metadata_encode
 from ..common import CommonBase
 
 LOGGER = logging.getLogger(__name__)
@@ -29,10 +30,13 @@ class PolicyQuery(CommonBase):
 
     pq_data = None
     user_id = None
+    _proto = None
     _addr = None
     _port = None
-    _path = None
-    _url = None
+    _uploader_path = None
+    _ingest_path = None
+    _uploader_url = None
+    _ingest_url = None
     _auth = None
 
     def set_user(self, user):
@@ -53,23 +57,37 @@ class PolicyQuery(CommonBase):
         """Get the user id."""
         return self.user_id
 
+    def _set_url_from_parts(self):
+        """Set the url from the parts in self."""
+        for url_part in ['uploader', 'ingest']:
+            if not getattr(self, '_{}_url'.format(url_part)):
+                url_str = '{}://{}:{}{}'.format(
+                    self._proto,
+                    self._addr,
+                    self._port,
+                    getattr(self, '_{}_path'.format(url_part))
+                )
+                setattr(self, '_{}_url'.format(url_part), url_str)
+
     def __init__(self, user, *args, **kwargs):
         """Set the policy server url and define any data for the query."""
         self._server_url(
             [
+                ('proto', 'http'),
                 ('port', 8181),
                 ('addr', '127.0.0.1'),
-                ('path', '/uploader'),
-                ('url', None)
+                ('uploader_path', '/uploader'),
+                ('ingest_path', '/ingest'),
+                ('uploader_url', None),
+                ('ingest_url', None)
             ],
             'POLICY',
             kwargs
         )
+        self._set_url_from_parts()
         self._setup_requests_session()
-        if not self._url:
-            self._url = 'http://{}:{}{}'.format(self._addr, self._port, self._path)
         self._auth = kwargs.pop('auth', {})
-        LOGGER.debug('Policy URL %s auth %s', self._url, self._auth)
+        LOGGER.debug('Policy URL %s auth %s', self._uploader_url, self._auth)
         # global sential value for userid
         if user != -1:
             self.set_user(user)
@@ -92,9 +110,17 @@ class PolicyQuery(CommonBase):
     def get_results(self):
         """Get results from the Policy server for the query."""
         headers = {'content-type': 'application/json'}
-        LOGGER.debug('Policy Query %s', self.tojson())
-        reply = self.session.post(self._url, headers=headers, data=self.tojson(), **self._auth)
-        LOGGER.debug('Policy Result %s', reply.content)
+        LOGGER.debug('Policy Query Uploader %s', self.tojson())
+        reply = self.session.post(self._uploader_url, headers=headers, data=self.tojson(), **self._auth)
+        LOGGER.debug('Policy Result Uploader %s', reply.content)
+        return reply.json()
+
+    def valid_metadata(self, md_obj):
+        """Check the metadata object against the ingest API."""
+        headers = {'content-type': 'application/json'}
+        LOGGER.debug('Policy Query Ingest %s', metadata_encode(md_obj))
+        reply = self.session.post(self._ingest_url, headers=headers, data=metadata_encode(md_obj), **self._auth)
+        LOGGER.debug('Policy Result Ingest %s', reply.content)
         return reply.json()
 
 
