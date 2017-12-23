@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the bundler module."""
 from __future__ import absolute_import
 import os

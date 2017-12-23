@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Module used to update MetaData objects."""
 from __future__ import absolute_import
 from .MetaData import MetaData
@@ -46,7 +47,8 @@ class MetaUpdate(MetaData):
         for dep_meta_id in self.dependent_meta_id(meta_id):
             self.update_parents(dep_meta_id)
 
-        meta = self[meta_id]._replace(query_results=self.query_results(meta_id))
+        meta = self[meta_id]._replace(
+            query_results=self.query_results(meta_id))
         self[meta_id] = meta
 
         if meta.query_results and not meta.value:

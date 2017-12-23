@@ -8,8 +8,9 @@ MySQL-python
 -e git://github.com/pacifica/pacifica-policy.git#egg=PacificaPolicy
 -e git://github.com/pacifica/pacifica-uniqueid.git#egg=PacificaUniqueID
 peewee
+pep257
 pre-commit
-pylint
+pylint<1.8
 pytest
 radon
 requests

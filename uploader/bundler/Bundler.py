@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Main Bundler module containing classes and methods to handle bundling."""
 from os import path
 from StringIO import StringIO
@@ -66,7 +67,8 @@ class Bundler(object):
         self.file_data = file_data
         hashstr = str(kwargs.get('hashfunc', 'sha1'))
         if hashstr not in hashlib.algorithms_available:
-            raise ValueError('{} is not a valid hashlib algorithm.'.format(hashstr))
+            raise ValueError(
+                '{} is not a valid hashlib algorithm.'.format(hashstr))
         self._hashfunc = getattr(hashlib, hashstr)
         self._hashstr = hashstr
         self._done_size = 0
@@ -86,7 +88,7 @@ class Bundler(object):
             """Notify the callback with percent done while not complete."""
             while not self._complete:
                 sleep(sleeptime)
-                callback(float(self._done_size)/self._total_size)
+                callback(float(self._done_size) / self._total_size)
         notifythread = threading.Thread(target=notify)
         notifythread.daemon = True
         notifythread.start()
@@ -105,7 +107,8 @@ class Bundler(object):
         """Build the FileObj to and return it."""
         arc_path = file_data['name']
         mime_type = guess_type(arc_path, strict=True)[0]
-        file_time = datetime.utcfromtimestamp(int(file_data['mtime'])).isoformat()
+        file_time = datetime.utcfromtimestamp(
+            int(file_data['mtime'])).isoformat()
         info = {
             'size': file_data['size'],
             'mimetype': mime_type if mime_type is not None else 'application/octet-stream',
@@ -145,7 +148,8 @@ class Bundler(object):
         for file_data in self.file_data:
             tarinfo, fileobj = self._tarinfo_from_file_data(file_data)
             tarfile.addfile(tarinfo, fileobj)
-            self.md_obj.append(self._build_file_info(file_data, fileobj.hashdigest()))
+            self.md_obj.append(self._build_file_info(
+                file_data, fileobj.hashdigest()))
         md_txt = metadata_encode(self.md_obj)
         md_fd = StringIO(md_txt)
         md_tinfo = TarInfo('metadata.txt')

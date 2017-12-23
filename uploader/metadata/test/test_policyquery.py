@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the metadata module."""
 from __future__ import absolute_import
 from unittest import TestCase
@@ -17,11 +18,13 @@ class TestPolicyQuery(TestCase):
     def test_pq_json(self):
         """Test converting the PolicyQuery to json."""
         policyquery = PolicyQuery('dmlb2001')
-        self.assertEqual(policyquery.tojson(), '{"user": 10, "columns": null, "where": null, "from": null}')
+        self.assertEqual(policyquery.tojson(
+        ), '{"user": 10, "columns": null, "where": null, "from": null}')
 
     def test_pq_fromjson(self):
         """Test JSON to the PolicyQuery object."""
-        policyquery = PolicyQuery.fromjson('{ "user": "dmlb2001", "from": "mytable" }')
+        policyquery = PolicyQuery.fromjson(
+            '{ "user": "dmlb2001", "from": "mytable" }')
         self.assertEqual(policyquery.pq_data.from_table, 'mytable')
 
     def test_pq_query(self):

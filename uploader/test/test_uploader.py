@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the uploader module."""
 from __future__ import absolute_import
 from os import unlink, stat
@@ -30,7 +31,8 @@ class TestUploader(TestCase):
                 [
                     MetaObj(destinationTable='Transactions._id', value=1234),
                     MetaObj(destinationTable='Transactions.submitter', value=10),
-                    MetaObj(destinationTable='Transactions.proposal', value=u'1234a'),
+                    MetaObj(destinationTable='Transactions.proposal',
+                            value=u'1234a'),
                     MetaObj(destinationTable='Transactions.instrument', value=54)
                 ]
             )

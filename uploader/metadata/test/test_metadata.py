@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the metadata module."""
 import json
 from unittest import TestCase
@@ -59,7 +60,8 @@ class TestMetaData(TestCase):
 
     def test_md_setitem_error(self):
         """A FileObj can't be inserted by an ID it doesn't have."""
-        md_obj = MetaData([MetaObj(destinationTable='blarg'), MetaObj(destinationTable='blarg2', metaID='aboodaba')])
+        md_obj = MetaData([MetaObj(destinationTable='blarg'), MetaObj(
+            destinationTable='blarg2', metaID='aboodaba')])
         file_obj = FileObj()
         hit_exception = False
         try:
@@ -104,13 +106,15 @@ class TestMetaData(TestCase):
     def test_md_extend(self):
         """Test the append features of MetaData."""
         md_obj = MetaData([MetaObj(destinationTable='blarg')])
-        md_obj.extend(MetaData([MetaObj(destinationTable='blarg2', metaID='aboodaba')]))
+        md_obj.extend(
+            MetaData([MetaObj(destinationTable='blarg2', metaID='aboodaba')]))
         self.assertTrue(len(md_obj) == 2)
         self.assertTrue(md_obj[1] == md_obj['aboodaba'])
 
     def test_md_pop(self):
         """Test the pop features of MetaData."""
-        md_obj = MetaData([MetaObj(destinationTable='blarg'), MetaObj(destinationTable='blarg2', metaID='aboodaba')])
+        md_obj = MetaData([MetaObj(destinationTable='blarg'), MetaObj(
+            destinationTable='blarg2', metaID='aboodaba')])
         self.assertTrue(len(md_obj) == 2)
         mo_obj = md_obj.pop()
         self.assertTrue(mo_obj.metaID == 'aboodaba')
@@ -123,7 +127,8 @@ class TestMetaData(TestCase):
 
     def test_md_insert(self):
         """Test the insert features of MetaData."""
-        md_obj = MetaData([MetaObj(destinationTable='blarg'), MetaObj(destinationTable='blarg2', metaID='aboodaba')])
+        md_obj = MetaData([MetaObj(destinationTable='blarg'), MetaObj(
+            destinationTable='blarg2', metaID='aboodaba')])
         mo_obj = MetaObj(destinationTable='insert', metaID='inserted')
         md_obj.insert(1, mo_obj)
         self.assertTrue(md_obj[1] == mo_obj)

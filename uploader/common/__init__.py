@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Common uploader functionality."""
 from os import getenv
 import requests
@@ -23,5 +24,6 @@ class CommonBase(object):
             attr_name = '_{}'.format(part)
             setattr(self, attr_name, kwargs.get(part))
             if not getattr(self, attr_name):
-                setattr(self, attr_name, getenv('{}{}'.format(env_prefix, attr_name.upper()), default))
+                setattr(self, attr_name, getenv('{}{}'.format(
+                    env_prefix, attr_name.upper()), default))
 # pylint: enable=too-few-public-methods

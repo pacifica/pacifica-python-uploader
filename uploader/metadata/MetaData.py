@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """MetaData class to handle input and output of metadata format."""
 from __future__ import absolute_import
 import json
@@ -40,7 +41,8 @@ class MetaData(list):
             if getattr(value, 'metaID', False):
                 true_key = int(self._meta_index_map[old_val.metaID])
             else:
-                raise IndexError('No metaID {}'.format(getattr(value, 'metaID', False)))
+                raise IndexError('No metaID {}'.format(
+                    getattr(value, 'metaID', False)))
         super(MetaData, self).__setitem__(true_key, value)
         if getattr(old_val, 'metaID', False):
             del self._meta_index_map[old_val.metaID]
@@ -59,7 +61,7 @@ class MetaData(list):
         """Append the value to the list."""
         super(MetaData, self).append(value)
         if getattr(value, 'metaID', False):
-            self._meta_index_map[value.metaID] = len(self)-1
+            self._meta_index_map[value.metaID] = len(self) - 1
 
     def extend(self, iterable):
         """Extend the array from the values in iterable."""
@@ -75,7 +77,7 @@ class MetaData(list):
     def pop(self, key=-1):
         """Remove the key from the list and return it."""
         if key == -1:
-            key = len(self)-1
+            key = len(self) - 1
         value = super(MetaData, self).pop(key)
         if getattr(value, 'metaID', False):
             del self._meta_index_map[value.metaID]
@@ -153,7 +155,8 @@ class MetaDataEncoder(json.JSONEncoder):
                 if not hasattr(mobj, 'destinationTable'):
                     return json.JSONEncoder.default(self, o)
                 encoder_class = FileObjEncoder if mobj.destinationTable == 'Files' else MetaObjEncoder
-                json_parts.append(json.loads(json.dumps(mobj, cls=encoder_class)))
+                json_parts.append(json.loads(
+                    json.dumps(mobj, cls=encoder_class)))
             return json.dumps(json_parts)
         return json.JSONEncoder.default(self, o)
 

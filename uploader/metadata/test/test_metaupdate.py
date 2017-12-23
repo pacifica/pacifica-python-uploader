@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Module used to test the MetaUpdate module."""
 from unittest import TestCase
 from ..MetaUpdate import MetaUpdate

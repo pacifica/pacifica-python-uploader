@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """This is the module for quering the Policy service."""
 from __future__ import absolute_import
 import json
@@ -91,7 +92,8 @@ class PolicyQuery(CommonBase):
         # global sential value for userid
         if user != -1:
             self.set_user(user)
-            self.pq_data = PolicyQueryData(user=self.get_user(), *args, **kwargs)
+            self.pq_data = PolicyQueryData(
+                user=self.get_user(), *args, **kwargs)
         else:
             self.pq_data = PolicyQueryData(user=-1, **kwargs)
 
@@ -111,7 +113,8 @@ class PolicyQuery(CommonBase):
         """Get results from the Policy server for the query."""
         headers = {'content-type': 'application/json'}
         LOGGER.debug('Policy Query Uploader %s', self.tojson())
-        reply = self.session.post(self._uploader_url, headers=headers, data=self.tojson(), **self._auth)
+        reply = self.session.post(
+            self._uploader_url, headers=headers, data=self.tojson(), **self._auth)
         LOGGER.debug('Policy Result Uploader %s', reply.content)
         return reply.json()
 
@@ -119,7 +122,8 @@ class PolicyQuery(CommonBase):
         """Check the metadata object against the ingest API."""
         headers = {'content-type': 'application/json'}
         LOGGER.debug('Policy Query Ingest %s', metadata_encode(md_obj))
-        reply = self.session.post(self._ingest_url, headers=headers, data=metadata_encode(md_obj), **self._auth)
+        reply = self.session.post(
+            self._ingest_url, headers=headers, data=metadata_encode(md_obj), **self._auth)
         LOGGER.debug('Policy Result Ingest %s', reply.content)
         return reply.json()
 
@@ -139,5 +143,6 @@ def _mangle_decode(**json_data):
     return PolicyQueryData(**json_data)
 
 
-PolicyQueryDataEncoder = generate_namedtuple_encoder(PolicyQueryData, _mangle_encode)
+PolicyQueryDataEncoder = generate_namedtuple_encoder(
+    PolicyQueryData, _mangle_encode)
 PolicyQueryDataDecoder = generate_namedtuple_decoder(_mangle_decode)

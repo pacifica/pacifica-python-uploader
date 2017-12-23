@@ -1,11 +1,16 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Encode and decode objects into json."""
 import json
 
 
 def strip_obj(obj):
     """Remove all keys who's values are False."""
-    [obj.pop(x) for x in obj.keys() if obj[x] is None]  # pylint: disable=expression-not-assigned
+    # we are ignoring return of expression we want the side affect
+    # pylint: disable=expression-not-assigned
+    [obj.pop(x) for x in obj.keys() if obj[x]
+     # pylint: enable=expression-not-assigned
+     is None]  # pylint: disable=expression-not-assigned
 
 
 def generate_namedtuple_encoder(cls, mangle=strip_obj):
