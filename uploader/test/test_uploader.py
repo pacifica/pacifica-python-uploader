@@ -44,6 +44,7 @@ class TestUploader(TestCase):
             up_obj = Uploader()
             rbundle_fd = open(bundle_fd.name, 'r')
             job_id = up_obj.upload(rbundle_fd, content_length=bundle_size)
+            rbundle_fd.close()
             self.assertTrue(job_id)
             status = up_obj.getstate(job_id)
 

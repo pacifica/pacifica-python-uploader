@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """Module used to test the MetaUpdate module."""
 from unittest import TestCase
-from ..MetaUpdate import MetaUpdate
-from ..MetaData import MetaObj
+from ..metaupdate import MetaUpdate
+from ..metadata import MetaObj
 
 
 class TestMetaUpdate(TestCase):

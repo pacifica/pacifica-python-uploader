@@ -1,7 +1,6 @@
 celery
 codeclimate-test-reporter
 coverage>=4.0,<4.4
-MySQL-python
 -e git://github.com/pacifica/pacifica-archiveinterface.git#egg=PacificaArchiveInterface
 -e git://github.com/pacifica/pacifica-ingest.git#egg=PacificaIngest
 -e git://github.com/pacifica/pacifica-metadata.git#egg=PacificaMetadata
@@ -10,7 +9,8 @@ MySQL-python
 peewee
 pep257
 pre-commit
-pylint<1.8
+pylint
 pytest
 radon
 requests
+six

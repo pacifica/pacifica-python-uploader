@@ -4,7 +4,7 @@
 from __future__ import absolute_import
 from unittest import TestCase
 from .. import metadata_decode
-from ..PolicyQuery import PolicyQuery
+from ..policyquery import PolicyQuery
 
 
 class TestPolicyQuery(TestCase):

@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """Module used to update MetaData objects."""
 from __future__ import absolute_import
-from .MetaData import MetaData
-from .PolicyQuery import PolicyQuery
+from .metadata import MetaData
+from .policyquery import PolicyQuery
 
 
 class MetaUpdate(MetaData):
@@ -22,7 +22,7 @@ class MetaUpdate(MetaData):
     def query_results(self, meta_id):
         """Build a PolicyQuery out of the meta_id."""
         where_clause = {}
-        for column, dep_meta_id in self[meta_id].queryDependency.iteritems():
+        for column, dep_meta_id in self[meta_id].queryDependency.items():
             where_clause[column] = self[dep_meta_id].value
         pq_obj = PolicyQuery(
             user=self._user,

@@ -5,8 +5,8 @@ from __future__ import absolute_import
 import json
 import logging
 from collections import namedtuple
-from .Json import generate_namedtuple_encoder, generate_namedtuple_decoder
-from .MetaData import metadata_encode
+from .mjson import generate_namedtuple_encoder, generate_namedtuple_decoder
+from .metadata import metadata_encode
 from ..common import CommonBase
 
 LOGGER = logging.getLogger(__name__)

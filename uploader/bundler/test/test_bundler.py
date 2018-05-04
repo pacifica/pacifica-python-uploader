@@ -8,6 +8,7 @@ from unittest import TestCase
 from random import randint
 from tempfile import NamedTemporaryFile
 from tarfile import TarFile
+from six import PY2
 from ... import bundler
 from ...metadata import MetaData, MetaObj
 
@@ -26,7 +27,12 @@ class BuildSampleData(object):
         num_files = randint(15, 25)
         for file_i in range(num_files):
             temp_i = NamedTemporaryFile(delete=False)
-            temp_i.write('This is the content of {}\n'.format(file_i))
+            uni_str = '\n'.join(
+                ['{}: This is the content of {}\n'.format(
+                    i, file_i) for i in range(file_i)]
+            )
+            byte_str = uni_str if PY2 else bytes(uni_str, 'UTF-8')
+            temp_i.write(byte_str)
             temp_i.close()
             self.names.append(temp_i.name)
             self.files.append({
@@ -63,8 +69,9 @@ class TestBundlerModule(TestCase):
         check_tar = TarFile(bundle_fd.name, 'r')
         md_fd = check_tar.extractfile('metadata.txt')
         self.assertTrue(md_fd)
-        self.assertTrue(loads(md_fd.read()))
-        unlink(bundle_fd.name)
+        md_bytes = md_fd.read()
+        md_str = md_bytes if PY2 else md_bytes.decode('utf8')
+        self.assertTrue(loads(md_str))
 
     def test_bundler_basic_with_cb(self):
         """Test the bundler to stream a tarfile."""

@@ -4,7 +4,7 @@
 from __future__ import absolute_import
 import json
 from collections import namedtuple
-from .Json import generate_namedtuple_encoder, generate_namedtuple_decoder
+from .mjson import generate_namedtuple_encoder, generate_namedtuple_decoder
 
 
 class MetaData(list):
@@ -86,7 +86,7 @@ class MetaData(list):
     def insert(self, key, value):
         """Insert the value to the list."""
         super(MetaData, self).insert(key, value)
-        for ikey, ivalue in self._meta_index_map.iteritems():
+        for ikey, ivalue in self._meta_index_map.items():
             if ivalue >= key:
                 self._meta_index_map[ikey] = ivalue + 1
         if getattr(value, 'metaID', False):

@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 """Main Bundler module containing classes and methods to handle bundling."""
 from os import path
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:  # pragma: no cover python 3
+    from io import BytesIO as StringIO
 import threading
 from time import sleep
 import hashlib
@@ -10,6 +13,7 @@ from tarfile import TarInfo
 from tarfile import open as taropen
 from datetime import datetime
 from mimetypes import guess_type
+from six import PY2
 from ..metadata import FileObj, metadata_encode
 
 
@@ -25,6 +29,7 @@ class HashFileObj(object):
     def read(self, size=-1):
         """Read wrapper function."""
         buf = self.filedesc.read(size)
+        buf = buf if PY2 else bytes(buf, 'UTF-8')
         self.hashval.update(buf)
         self.upref._done_size += len(buf)
         return buf
@@ -151,6 +156,7 @@ class Bundler(object):
             self.md_obj.append(self._build_file_info(
                 file_data, fileobj.hashdigest()))
         md_txt = metadata_encode(self.md_obj)
+        md_txt = md_txt if PY2 else bytes(md_txt, 'UTF-8')
         md_fd = StringIO(md_txt)
         md_tinfo = TarInfo('metadata.txt')
         md_tinfo.size = len(md_txt)
