@@ -29,7 +29,8 @@ class HashFileObj(object):
     def read(self, size=-1):
         """Read wrapper function."""
         buf = self.filedesc.read(size)
-        buf = buf if PY2 else bytes(buf, 'UTF-8')
+        if not PY2 and not isinstance(buf, bytes):  # pragma: no cover
+            buf = bytes(buf, 'UTF-8')
         self.hashval.update(buf)
         self.upref._done_size += len(buf)
         return buf
