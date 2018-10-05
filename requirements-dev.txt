@@ -9,7 +9,7 @@ coverage>=4.0,<4.4
 peewee
 pep257
 pre-commit
-pylint
+pylint<2.0
 pytest
 radon
 requests

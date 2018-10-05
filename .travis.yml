@@ -1,27 +1,72 @@
 services:
- - postgresql
- - mysql
- - elasticsearch
- - rabbitmq
-language: python
-python:
- - 2.7
- - 3.6
-
+- postgresql
+- mysql
+- elasticsearch
+- rabbitmq
 addons:
   apt:
     sources:
-      - elasticsearch-5.x
+    - elasticsearch-5.x
     packages:
-      - elasticsearch
-      - oracle-java8-set-default
-
+    - elasticsearch
+    - oracle-java8-set-default
+stages:
+- lint
+- test
+- deploy
 env:
-- RUN_LINTS=true
-- RUN_LINTS=
-
+  POSTGRES_ENV_POSTGRES_USER: postgres
+  POSTGRES_ENV_POSTGRES_PASSWORD:
 cache: pip
+before_install:
+- pip install --upgrade pip setuptools wheel
+- bash -xe travis/before-install.sh
+install:
+- pip install -r requirements-dev.txt
 
-before_install: bash -xe travis/before-install.sh
-install: pip install -r requirements-dev.txt
-script: bash -xe travis/test-script.sh
+
+.test_job: &test_job
+  language: python
+  stage: test
+  script:
+  - coverage run --include='pacifica/*' -m pytest -v
+  - coverage report --show-missing --fail-under 100
+  - if [[ $CODECLIMATE_REPO_TOKEN ]] ; then codeclimate-test-reporter ; fi
+  - pip install .
+  - python setup.py bdist_wheel
+  - python setup.py sdist
+
+.lint_job: &lint_job
+  language: python
+  stage: lint
+  script:
+  - pre-commit run -a
+  - radon cc pacifica
+
+.deploy_job: &deploy_job
+  language: python
+  stage: deploy
+  script: skip
+  deploy:
+    skip_cleanup: true
+    provider: pypi
+    user: dmlb2000
+    password:
+      secure: 1wxE9HgjeikBFXcrLc2Jfs6auR17ahecYntGQJBj/WZ9/rAexyfo9lv9dV1CBwn3EJNmipBUZEKVVuBNOZiXx+Iuj1q0DOYql98drWQH+RsT0cp+KmXySvnvgnw3bf0WGULb/C9A+BShFtocRSkn8VcJcx2v0s8x+niVBxj1uIGtER7/qv9cqgCtXocr1LI75LhWV48ZLU6qWuAQyk9TbcIHlUqPUNYXqcG41cmMDk7Kc7mCnYomly6gCq9dgIHl8GrbVPSLxGu0bqD/GJjagOHaEKnPw83gSO5ZT20Dh372/4xLctrKKe+zSj3U5LcuVqbMrWLrKGQJcWqtmTkbnyWKB6zs1M5HxtWKgbCB/2lSWb4xWIqA9DPCzPRRbtELpe2KGjS/SqEmquZ0ZCpF+Ioc0WRDbVDY0yrQw7JGShMK2+Y/JFhL8iI16a79Dacyu8Fgo8iiKU7pTzDNLYyS6xZbVJAnS9J+grhkM5Lo1oLj1MfTyr60k2cSiXiS1iIbN7lDYKusfIHD3TneuSEuIp5eAi48vywdm5URrvX/pGUIGzf8Zpy3l6Oe50Desp6T4TnmFaaJ/EkSbwvlGu3vaa4hJikN+MXEAfuo17U9dVdIacgZc5oPuHgvR1R4oCQfeKksRZWf4O2aqQALoU3BqEtJ+7X0AfNQG3aAgPn71QY=
+    distributions: sdist bdist_wheel
+    on:
+      tags: true
+jobs:
+  include:
+  - <<: *lint_job
+    python: 3.6
+  - <<: *lint_job
+    python: 2.7
+  - <<: *test_job
+    python: 3.6
+  - <<: *test_job
+    python: 2.7
+  - <<: *deploy_job
+    python: 3.6
+  - <<: *deploy_job
+    python: 2.7

@@ -62,5 +62,5 @@ install:
 build: off
 
 test_script:
-  - ps: '& "$env:PYTHON\python.exe" -m coverage run --include="uploader/*" -m pytest -v uploader'
+  - ps: '& "$env:PYTHON\python.exe" -m coverage run --include="pacifica/*" -m pytest -v pacifica'
   - ps: '& "$env:PYTHON\python.exe" -m coverage report --show-missing --fail-under 100'
