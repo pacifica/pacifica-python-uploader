@@ -23,35 +23,39 @@ before_install:
 - bash -xe travis/before-install.sh
 install:
 - pip install -r requirements-dev.txt
-
-
-.test_job: &test_job
+".test_job":
   language: python
   stage: test
-  script:
+  script: &2
   - coverage run --include='pacifica/*' -m pytest -v
   - coverage report --show-missing --fail-under 100
   - if [[ $CODECLIMATE_REPO_TOKEN ]] ; then codeclimate-test-reporter ; fi
   - pip install .
   - python setup.py bdist_wheel
   - python setup.py sdist
-
-.lint_job: &lint_job
+".lint_job":
   language: python
   stage: lint
-  script:
+  script: &1
   - pre-commit run -a
   - radon cc pacifica
-
 jobs:
   include:
-  - <<: *lint_job
+  - language: python
+    stage: lint
+    script: *1
     python: 3.6
-  - <<: *lint_job
+  - language: python
+    stage: lint
+    script: *1
     python: 2.7
-  - <<: *test_job
+  - language: python
+    stage: test
+    script: *2
     python: 3.6
-  - <<: *test_job
+  - language: python
+    stage: test
+    script: *2
     python: 2.7
   - stage: deploy
     services: []
@@ -65,7 +69,7 @@ jobs:
       user: dmlb2000
       distributions: sdist bdist_wheel
       password:
-        secure: paSvml0+LPQTY/oMXWpV6EIPfgLrHXJjsWqnZXyOGmWmV6kE8gDNls0iT4NEqlhcg0V7VA1274TPfA4sceSnxzR99HJDHlodyqCq86ehSsKmCHFHosi7Fgjtdh8ybbxV1TKhODVSPz414jqwZbdWdCDtEzGnqXfhsGQ4jc+yfKaGaLbjwKQF0VwyaxYXUWb9tVtmxDN0ywwPyNGHU5vSWcyFh+JblugtUBTc4bpwMcJMw6S+dWa/MKOjA/b0k0wWTbnF5u1ebKsmorThipxi3/XiFUzHsJJH/lI5OMXd6vZ6c3g5j0TS+dC6IaJA/8eoITbMw6doqdunsaGjq7xqjioVu/ROMKjlFHxmqz6uJEeLB4RJPqp/CKmAMjFnXUT0aRA0rKUT1USBhuwagQHzHEwOt9q6hH0t0ox2bpjhR7H7g4fzb2BWZ/IQGSPIcpv94DWxYex+xfPOD/18xbNp7hP1aQEc7UbKtFltcaYXUADyS7d/Llh4Hp8YSh+9ptTLsCsVdUBd9zxEYjFcGIdUZKpoeTuKasrwmX3KQIuAg6wht/H1q7OsGb9qi9FCGEiwzTxCuub9c01PcSqEJiBjosQJLYTTmcVBHsLXfYq06JQe/CqnClZXqFoJvtBoD9Q1cxVF/6HyZ1dsOWZzA8ksirQwLkvMH5Kwf0t6v3gN18I=
+        secure: ih2ArW9JXkMHeyWydRU12Fw1YYJGt5axgrlgne5C0QX3/qPu46Mr8X7VVOMt6j6O+EHVP+Ph4PUV2qh3juNidxcIyOr+kSVXDWw0MNRQbyenjO02B7SpisdyfmtuRG/PZWhUWQII1ULYPihsDvxc6JOVqzTAYlj2r4Ley9ZTj929lC/JA4dNq4pVhUEXCrtWx/TuX+FWmMwfUqaF6zw3O3/jGrE3Ml0jtR3Jmb/V9t0zAjLD0fGksaaw75qjyNjTLID7EKCLSfAEX+NHwNjypuxpb6shOl+w005MaZzIfk7Wcw35mgU96SON8bKFts648nwyYeZByUkQ76dqkDB6KjTuTNaeHFsuq93oXGmZCcM0QVJVJSz97SgOCJiI3nD1ushQ9TuhU3tdQW1ty5HO7l1lrzfdPQEiVu3PjTURY5ptNOtuemtfrHQiv64Be5iBDnv/BduUpSrWL84MGhygWLyau052wt4ke54gKwH6xbVYcKx15REXJmdYmKQe4cSfxhrHK2/rgw0zTyGf8qrieg3oL2sgb/NpQQIfDUtLvW0n73qiCF/QZ+d5bn7fpB7MY58CGgfTnL33qnfaJnf6nbkg6cc96hGF6qc96ww+F5WqEOrKTfykuiO7N3fYyzmL0zrBzWifUIXDOwzamW6NXLie5WPag+aUdqVlsTsEk88=
       on:
         tags: true
   - stage: deploy
@@ -80,6 +84,6 @@ jobs:
       user: dmlb2000
       distributions: bdist_wheel
       password:
-        secure: paSvml0+LPQTY/oMXWpV6EIPfgLrHXJjsWqnZXyOGmWmV6kE8gDNls0iT4NEqlhcg0V7VA1274TPfA4sceSnxzR99HJDHlodyqCq86ehSsKmCHFHosi7Fgjtdh8ybbxV1TKhODVSPz414jqwZbdWdCDtEzGnqXfhsGQ4jc+yfKaGaLbjwKQF0VwyaxYXUWb9tVtmxDN0ywwPyNGHU5vSWcyFh+JblugtUBTc4bpwMcJMw6S+dWa/MKOjA/b0k0wWTbnF5u1ebKsmorThipxi3/XiFUzHsJJH/lI5OMXd6vZ6c3g5j0TS+dC6IaJA/8eoITbMw6doqdunsaGjq7xqjioVu/ROMKjlFHxmqz6uJEeLB4RJPqp/CKmAMjFnXUT0aRA0rKUT1USBhuwagQHzHEwOt9q6hH0t0ox2bpjhR7H7g4fzb2BWZ/IQGSPIcpv94DWxYex+xfPOD/18xbNp7hP1aQEc7UbKtFltcaYXUADyS7d/Llh4Hp8YSh+9ptTLsCsVdUBd9zxEYjFcGIdUZKpoeTuKasrwmX3KQIuAg6wht/H1q7OsGb9qi9FCGEiwzTxCuub9c01PcSqEJiBjosQJLYTTmcVBHsLXfYq06JQe/CqnClZXqFoJvtBoD9Q1cxVF/6HyZ1dsOWZzA8ksirQwLkvMH5Kwf0t6v3gN18I=
+        secure: ih2ArW9JXkMHeyWydRU12Fw1YYJGt5axgrlgne5C0QX3/qPu46Mr8X7VVOMt6j6O+EHVP+Ph4PUV2qh3juNidxcIyOr+kSVXDWw0MNRQbyenjO02B7SpisdyfmtuRG/PZWhUWQII1ULYPihsDvxc6JOVqzTAYlj2r4Ley9ZTj929lC/JA4dNq4pVhUEXCrtWx/TuX+FWmMwfUqaF6zw3O3/jGrE3Ml0jtR3Jmb/V9t0zAjLD0fGksaaw75qjyNjTLID7EKCLSfAEX+NHwNjypuxpb6shOl+w005MaZzIfk7Wcw35mgU96SON8bKFts648nwyYeZByUkQ76dqkDB6KjTuTNaeHFsuq93oXGmZCcM0QVJVJSz97SgOCJiI3nD1ushQ9TuhU3tdQW1ty5HO7l1lrzfdPQEiVu3PjTURY5ptNOtuemtfrHQiv64Be5iBDnv/BduUpSrWL84MGhygWLyau052wt4ke54gKwH6xbVYcKx15REXJmdYmKQe4cSfxhrHK2/rgw0zTyGf8qrieg3oL2sgb/NpQQIfDUtLvW0n73qiCF/QZ+d5bn7fpB7MY58CGgfTnL33qnfaJnf6nbkg6cc96hGF6qc96ww+F5WqEOrKTfykuiO7N3fYyzmL0zrBzWifUIXDOwzamW6NXLie5WPag+aUdqVlsTsEk88=
       on:
         tags: true
