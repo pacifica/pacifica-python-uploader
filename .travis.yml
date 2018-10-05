@@ -47,15 +47,7 @@ install:
   language: python
   stage: deploy
   script: skip
-  deploy:
-    skip_cleanup: true
-    provider: pypi
-    user: dmlb2000
-    password:
-      secure: 1wxE9HgjeikBFXcrLc2Jfs6auR17ahecYntGQJBj/WZ9/rAexyfo9lv9dV1CBwn3EJNmipBUZEKVVuBNOZiXx+Iuj1q0DOYql98drWQH+RsT0cp+KmXySvnvgnw3bf0WGULb/C9A+BShFtocRSkn8VcJcx2v0s8x+niVBxj1uIGtER7/qv9cqgCtXocr1LI75LhWV48ZLU6qWuAQyk9TbcIHlUqPUNYXqcG41cmMDk7Kc7mCnYomly6gCq9dgIHl8GrbVPSLxGu0bqD/GJjagOHaEKnPw83gSO5ZT20Dh372/4xLctrKKe+zSj3U5LcuVqbMrWLrKGQJcWqtmTkbnyWKB6zs1M5HxtWKgbCB/2lSWb4xWIqA9DPCzPRRbtELpe2KGjS/SqEmquZ0ZCpF+Ioc0WRDbVDY0yrQw7JGShMK2+Y/JFhL8iI16a79Dacyu8Fgo8iiKU7pTzDNLYyS6xZbVJAnS9J+grhkM5Lo1oLj1MfTyr60k2cSiXiS1iIbN7lDYKusfIHD3TneuSEuIp5eAi48vywdm5URrvX/pGUIGzf8Zpy3l6Oe50Desp6T4TnmFaaJ/EkSbwvlGu3vaa4hJikN+MXEAfuo17U9dVdIacgZc5oPuHgvR1R4oCQfeKksRZWf4O2aqQALoU3BqEtJ+7X0AfNQG3aAgPn71QY=
-    distributions: sdist bdist_wheel
-    on:
-      tags: true
+
 jobs:
   include:
   - <<: *lint_job
@@ -70,3 +62,13 @@ jobs:
     python: 3.6
   - <<: *deploy_job
     python: 2.7
+
+deploy:
+  skip_cleanup: true
+  provider: pypi
+  user: dmlb2000
+  distributions: sdist bdist_wheel
+  password:
+    secure: 1wxE9HgjeikBFXcrLc2Jfs6auR17ahecYntGQJBj/WZ9/rAexyfo9lv9dV1CBwn3EJNmipBUZEKVVuBNOZiXx+Iuj1q0DOYql98drWQH+RsT0cp+KmXySvnvgnw3bf0WGULb/C9A+BShFtocRSkn8VcJcx2v0s8x+niVBxj1uIGtER7/qv9cqgCtXocr1LI75LhWV48ZLU6qWuAQyk9TbcIHlUqPUNYXqcG41cmMDk7Kc7mCnYomly6gCq9dgIHl8GrbVPSLxGu0bqD/GJjagOHaEKnPw83gSO5ZT20Dh372/4xLctrKKe+zSj3U5LcuVqbMrWLrKGQJcWqtmTkbnyWKB6zs1M5HxtWKgbCB/2lSWb4xWIqA9DPCzPRRbtELpe2KGjS/SqEmquZ0ZCpF+Ioc0WRDbVDY0yrQw7JGShMK2+Y/JFhL8iI16a79Dacyu8Fgo8iiKU7pTzDNLYyS6xZbVJAnS9J+grhkM5Lo1oLj1MfTyr60k2cSiXiS1iIbN7lDYKusfIHD3TneuSEuIp5eAi48vywdm5URrvX/pGUIGzf8Zpy3l6Oe50Desp6T4TnmFaaJ/EkSbwvlGu3vaa4hJikN+MXEAfuo17U9dVdIacgZc5oPuHgvR1R4oCQfeKksRZWf4O2aqQALoU3BqEtJ+7X0AfNQG3aAgPn71QY=
+  on:
+    tags: true
