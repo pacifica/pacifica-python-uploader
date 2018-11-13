@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """Module used to test the MetaUpdate module."""
 from unittest import TestCase
-from ..metaupdate import MetaUpdate
-from ..metadata import MetaObj
+from pacifica.uploader.metadata.metaupdate import MetaUpdate
+from pacifica.uploader.metadata.metadata import MetaObj
 
 
 class TestMetaUpdate(TestCase):

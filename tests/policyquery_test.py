@@ -3,8 +3,8 @@
 """Test the metadata module."""
 from __future__ import absolute_import
 from unittest import TestCase
-from .. import metadata_decode
-from ..policyquery import PolicyQuery
+from pacifica.uploader.metadata.metadata import metadata_decode
+from pacifica.uploader.metadata.policyquery import PolicyQuery
 
 
 class TestPolicyQuery(TestCase):

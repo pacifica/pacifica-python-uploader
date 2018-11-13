@@ -6,10 +6,10 @@ from os import unlink, stat
 from time import sleep
 from unittest import TestCase
 from tempfile import NamedTemporaryFile
-from .. import Uploader
-from .. import bundler
-from ..bundler.test.test_bundler import BuildSampleData
-from ..metadata import MetaData, MetaObj
+from pacifica.uploader import Uploader
+from pacifica.uploader import bundler
+from pacifica.uploader.metadata import MetaData, MetaObj
+from .bundler_test import BuildSampleData
 
 
 class TestUploader(TestCase):

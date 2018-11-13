@@ -9,8 +9,8 @@ from random import randint
 from tempfile import NamedTemporaryFile
 from tarfile import TarFile
 from six import PY2
-from ... import bundler
-from ...metadata import MetaData, MetaObj
+from pacifica.uploader import bundler
+from pacifica.uploader.metadata import MetaData, MetaObj
 
 
 # pylint: disable=too-few-public-methods

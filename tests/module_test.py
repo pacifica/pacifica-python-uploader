@@ -3,7 +3,7 @@
 """Test the metadata module."""
 from __future__ import absolute_import
 from unittest import TestCase
-from ... import metadata
+from pacifica.uploader import metadata
 
 
 class TestModule(TestCase):
