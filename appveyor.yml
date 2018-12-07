@@ -26,6 +26,7 @@ before_test:
     mkdir C:\archive;
     C:\pacifica\Scripts\activate.ps1;
     $env:METADATA_CPCONFIG = "$PWD/travis/metadata/server.conf";
+    pacifica-metadata-cmd dbsync;
     Start-Process C:\pacifica\Scripts\pacifica-metadata.exe -RedirectStandardError metadata-error.log -RedirectStandardOutput metadata-output.log;
     nuget install redis-64 -excludeversion;
     redis-64\tools\redis-server.exe --service-install;
