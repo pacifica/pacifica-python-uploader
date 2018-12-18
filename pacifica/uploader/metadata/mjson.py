@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Encode and decode objects into json."""
+"""
+Encode and decode objects into json.
+
+This module exports generators for encoding and decoding
+instances of the `collections.namedtuple` class using the JSON data format.
+"""
 import json
 
 
@@ -8,13 +13,17 @@ def strip_obj(obj):
     """Remove all keys who's values are False."""
     # we are ignoring return of expression we want the side affect
     # pylint: disable=expression-not-assigned
-    [obj.pop(x) for x in list(obj.keys()) if obj[x]
-     # pylint: enable=expression-not-assigned
-     is None]  # pylint: disable=expression-not-assigned
+    [obj.pop(x) for x in list(obj.keys()) if obj[x] is None]
+    # pylint: enable=expression-not-assigned
 
 
 def generate_namedtuple_encoder(cls, mangle=strip_obj):
-    """Return a namedtuple encoder for class cls."""
+    """
+    Return a namedtuple encoder for class cls.
+
+    Generate a sub-class of ``json.JSONEncoder``, which encodes the instances of
+    ``cls`` as a JSON object.
+    """
     class NamedTupleEncoder(json.JSONEncoder):
         """Class to encode a cls into json."""
 
@@ -29,7 +38,12 @@ def generate_namedtuple_encoder(cls, mangle=strip_obj):
 
 
 def generate_namedtuple_decoder(cls):
-    """Return a namedtuple decoder for the class cls."""
+    """
+    Return a namedtuple decoder for the class cls.
+
+    Generate a sub-class of ``json.JSONDecoder``, which decodes a JSON object into
+    an instance of ``cls``.
+    """
     class NamedTupleDecoder(json.JSONDecoder):
         """Class to decode a json string into a cls object."""
 

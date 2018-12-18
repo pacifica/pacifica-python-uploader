@@ -55,17 +55,20 @@ class Bundler(object):
         The `file_data` object should be a list of hashes. That are fed
         to TarInfo objects except for fileobj which is passed to addfile
         method.
-        ```
-        [
-            {
+
+        **Note:** The ``arcname`` keyword argument MUST be provided when calling the
+        ``tarfile.TarFile.gettarinfo()`` method.
+
+        Example MetaData Obj::
+
+            [
+              {
                 'name': 'archive file path',
                 'fileobj': 'open file object for read',
                 'size': 'size of the file',
                 'mtime': 'modify time of the file'
-            },
-        ...
-        ]
-        ```
+              }
+            ]
         """
         if not md_obj.is_valid():
             raise ValueError('MetaData is not valid yet.')
@@ -141,9 +144,11 @@ class Bundler(object):
         """
         Stream the bundle to the fileobj.
 
-        The fileobj should be an open file like object with 'wb' options.
-        If the callback is given then percent complete of the size
-        of the bundle will be given to the callback as the first argument.
+        This method is a blocking I/O operation.
+        The ``fileobj`` should be an open file like object with 'wb' options.
+        An asynchronous callback method MAY be provided via the optional ``callback``
+        keyword argument. Periodically, the callback method is provided with the current
+        percentage of completion.
         """
         notifythread = None
         if callable(callback):

@@ -1,13 +1,26 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Module used to update MetaData objects."""
+"""
+Module used to update MetaData objects.
+
+This module exports classes and methods for
+constructing and executing the strategy for modifying the values, including the
+parents and children, of instances of the `pacifica.uploader.metadata.MetaData` class.
+"""
 from __future__ import absolute_import
 from .metadata import MetaData
 from .policyquery import PolicyQuery
 
 
 class MetaUpdate(MetaData):
-    """Class to update the MetaData object."""
+    """
+    Class to update the MetaData object.
+
+    This class is a sub-class of the ``pacifica.uploader.metadata.MetaData``
+    class that is specialized to issue and handle
+    queries to `Pacifica Policy <https://github.com/pacifica/pacifica-policy>`_
+    servers.
+    """
 
     def __init__(self, user, *args, **kwargs):
         """Pull the user from the arguments so we can use that for policy queries."""
@@ -20,7 +33,12 @@ class MetaUpdate(MetaData):
         return self._auth
 
     def query_results(self, meta_id):
-        """Build a PolicyQuery out of the meta_id."""
+        """
+        Build a PolicyQuery out of the meta_id.
+
+        This method creates a ``pacifica.uploader.metadata.PolicyQuery`` object
+        that queries the policy server and returns the results.
+        """
         where_clause = {}
         for column, dep_meta_id in self[meta_id].queryDependency.items():
             where_clause[column] = self[dep_meta_id].value

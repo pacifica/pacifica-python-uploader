@@ -11,8 +11,14 @@ class MetaData(list):
     """
     Class to hold a list of MetaObj and FileObj objects.
 
-    This class implements the Python list interface with an extension
-    based on the `metaID` attribute of the MetaObj.
+    This class is a sub-class of ``list`` that implements
+    the index protocol (``__getitem__``, ``__setitem__`` and ``__delitem__``) as a proxy
+    to the indices of the value of the ``metaID`` field of the associated instance of
+    the ``pacifica.uploader.metadata.MetaObj`` class.
+
+    Instances of this class are upper-level objects that
+    provide the metadata for interacting with the designated
+    `Pacifica Ingest <https://github.com/pacifica/pacifica-ingest>`_ server.
     """
 
     def __init__(self, *args, **kwargs):
@@ -112,9 +118,22 @@ META_KEYS = [
     'directoryOrder',
     'query_results'
 ]
-MetaObj = namedtuple('MetaObj', META_KEYS)
+_MetaObj = namedtuple('MetaObj', META_KEYS)
 # Set the defaults to None for these attributes
-MetaObj.__new__.__defaults__ = (None,) * len(MetaObj._fields)
+_MetaObj.__new__.__defaults__ = (None,) * len(_MetaObj._fields)
+
+
+class MetaObj(_MetaObj):
+    """
+    MetaObj class holding a specific metadata element.
+
+    Instances of this class represent units of metadata
+    whose representation is disjoint to a file, i.e., units of metadata that are
+    describe but are not stored as part of a file.
+    """
+
+    pass
+
 
 FILE_KEYS = [
     'destinationTable',
@@ -127,9 +146,26 @@ FILE_KEYS = [
     'ctime',
     'mtime'
 ]
-FileObj = namedtuple('FileObj', FILE_KEYS)
+_FileObj = namedtuple('FileObj', FILE_KEYS)
 # Set the defaults to None for these attributes
-FileObj.__new__.__defaults__ = (None,) * len(FileObj._fields)
+_FileObj.__new__.__defaults__ = (None,) * len(_FileObj._fields)
+
+
+class FileObj(_FileObj):
+    """
+    FileObj class for holding file metadata.
+
+    Instances of this class represent individual files,
+    including both the data and metadata for the file. During a file upload,
+    instances of this class are automatically associated
+    with new instances of the ``pacifica.uploader.metadata.MetaData`` class.
+
+    The above named fields are identical to those of the ``pacifica.metadata.orm.Files`` class,
+    provided by the
+    `Pacifica Metadata <https://github.com/pacifica/pacifica-metadata>`_ library.
+    """
+
+    pass
 
 
 def file_or_meta_obj(**json_data):
@@ -174,10 +210,29 @@ class MetaDataDecoder(json.JSONDecoder):
 
 
 def metadata_decode(json_str):
-    """Decode the json string into MetaData object."""
+    """
+    Decode the json string into MetaData object.
+
+    This method deserializes the given
+    JSON source, ``json_str``, and then returns a new instance of the
+    ``pacifica.uploader.metadata.MetaData`` class.
+
+    The new instance is automatically associated with new instances of the
+    ``pacifica.uploader.metadata.MetaObj`` and ``pacifica.uploader.metadata.FileObj`` classes.
+    """
     return json.loads(json_str, cls=MetaDataDecoder)
 
 
 def metadata_encode(md_obj):
-    """Encode the MetaData object into a json string."""
+    """
+    Encode the MetaData object into a json string.
+
+    This method encodes the given
+    instance of the ``pacifica.uploader.metadata.MetaData`` class, ``md_obj``, as a JSON object,
+    and then returns its JSON serialization.
+
+    Associated instances of the ``pacifica.uploader.metadata.MetaObj`` and
+    ``pacifica.uploader.metadata.FileObj`` classes are automatically included in the JSON
+    object and the resulting JSON serialization.
+    """
     return json.dumps(md_obj, cls=MetaDataEncoder)

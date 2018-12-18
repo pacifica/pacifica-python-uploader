@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""This is the module for quering the Policy service."""
+"""
+This is the module for quering the Policy service.
+
+This module exports classes and methods for interacting with the designated
+`Pacifica Policy <https://github.com/pacifica/pacifica-policy>`_ server.
+"""
 from __future__ import absolute_import
 import json
 import logging
@@ -16,17 +21,29 @@ QUERY_KEYS = [
     'from_table',
     'where'
 ]
-PolicyQueryData = namedtuple('PolicyQueryData', QUERY_KEYS)
+_PolicyQueryData = namedtuple('PolicyQueryData', QUERY_KEYS)
 # Set the defaults to None for these attributes
-PolicyQueryData.__new__.__defaults__ = (None,) * len(PolicyQueryData._fields)
+_PolicyQueryData.__new__.__defaults__ = (None,) * len(_PolicyQueryData._fields)
+
+
+class PolicyQueryData(_PolicyQueryData):
+    """
+    Policy query data elements for policy query requests.
+
+    This class is a sub-class of the `collections.namedtuple` class. This class is used directly against the
+    `Pacifica Uploader Policy <https://github.com/pacifica/pacifica-policy/tree/master/pacifica/policy/uploader/>`_
+    endpoint.
+    """
+
+    pass
 
 
 class PolicyQuery(CommonBase):
     """
     Handle quering the policy server.
 
-    This class handles quering the policy server and parsing the
-    results.
+    Instances of this class represent queries to the designated
+    `Pacifica Policy <https://github.com/pacifica/pacifica-policy>`_ server.
     """
 
     pq_data = None
@@ -71,7 +88,13 @@ class PolicyQuery(CommonBase):
                 setattr(self, '_{}_url'.format(url_part), url_str)
 
     def __init__(self, user, *args, **kwargs):
-        """Set the policy server url and define any data for the query."""
+        """
+        Set the policy server url and define any data for the query.
+
+        The HTTP end-point for the policy server is
+        automatically pulled either from the system environment or from the keyword
+        arguments, `**kwargs`.
+        """
         self._server_url(
             [
                 ('proto', 'http'),
@@ -110,7 +133,14 @@ class PolicyQuery(CommonBase):
         return PolicyQuery(user, **pq_dict)
 
     def get_results(self):
-        """Get results from the Policy server for the query."""
+        """
+        Get results from the Policy server for the query.
+
+        This method returns a JSON object that is the result set for a query to the
+        `Pacifica Policy <https://github.com/pacifica/pacifica-policy>`_ server, i.e., the
+        entities that match the criteria that is represented by the associated instance
+        of the ``pacifica.uploader.metadata.PolicyQuery.PolicyQueryData`` class.
+        """
         headers = {'content-type': 'application/json'}
         LOGGER.debug('Policy Query Uploader %s', self.tojson())
         reply = self.session.post(
@@ -119,7 +149,13 @@ class PolicyQuery(CommonBase):
         return reply.json()
 
     def valid_metadata(self, md_obj):
-        """Check the metadata object against the ingest API."""
+        """
+        Check the metadata object against the ingest API.
+
+        This method validates the given instance of ``pacifica.uploader.metadata.MetaData``,
+        ``md_obj``, against the
+        `Pacifica Policy <https://github.com/pacifica/pacifica-policy>`_ server endpoint.
+        """
         headers = {'content-type': 'application/json'}
         LOGGER.debug('Policy Query Ingest %s', metadata_encode(md_obj))
         reply = self.session.post(

@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Uploader module send the data to the ingest service."""
+"""
+Uploader module send the data to the ingest service.
+
+This module exports classes and methods for interacting with
+`Pacifica Ingest <https://github.com/pacifica/pacifica-ingest>`_ servers.
+"""
 import logging
 from .common import CommonBase
 
@@ -9,7 +14,13 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Uploader(CommonBase):
-    """Uploader class to upload the bundle to an ingest server."""
+    """
+    Uploader class to upload the bundle to an ingest server.
+
+    This class exports methods that provide an API for
+    connecting to and handling connections to
+    `Pacifica Ingest <https://github.com/pacifica/pacifica-ingest>`_ servers.
+    """
 
     _proto = None
     _addr = None
@@ -47,7 +58,13 @@ class Uploader(CommonBase):
         LOGGER.debug('Status URL %s auth %s', self._status_url, self._auth)
 
     def upload(self, read_fd, content_length=None):
-        """Upload the data from a file like object."""
+        """
+        Upload the data from a file like object.
+
+        This method takes a file-like object as
+        input that has been opened for reading in binary mode, and returns a ``job_id``
+        for the upload.
+        """
         headers = {'content-type': 'application/octet-stream'}
         if content_length:
             headers['content-length'] = str(content_length)
@@ -57,7 +74,14 @@ class Uploader(CommonBase):
         return resp.json()['job_id']
 
     def getstate(self, job_id):
-        """Get the ingest state for a job."""
+        """
+        Get the ingest state for a job.
+
+        This method takes a ``job_id`` as input,
+        and returns a JSON object, as defined by the
+        `Pacifica Ingest <https://github.com/pacifica/pacifica-ingest>`_ API for
+        obtaining the status of the current job.
+        """
         resp = self.session.get('{}?job_id={}'.format(
             self._status_url, job_id), **self._auth)
         LOGGER.debug('Status Resp %s', resp.json())
