@@ -36,9 +36,11 @@ before_test:
     Start-Process C:\pacifica\Scripts\pacifica-archiveinterface.exe;
     $env:UNIQUEID_CONFIG = "$PWD/travis/uniqueid/config.cfg";
     $env:UNIQUEID_CPCONFIG = "$PWD/travis/uniqueid/server.conf";
+    pacifica-uniqueid-cmd dbsync;
     Start-Process C:\pacifica\Scripts\pacifica-uniqueid.exe;
     $env:INGEST_CONFIG = "$PWD/travis/ingest/config.cfg";
     $env:INGEST_CPCONFIG = "$PWD/travis/ingest/server.conf";
+    pacifica-ingest-cmd dbsync;
     Start-Process C:\pacifica\Scripts\pacifica-ingest.exe;
     Start-Process C:\pacifica\Scripts\celery.exe -ArgumentList "-A pacifica.ingest.tasks worker --loglevel=info -P eventlet";
     $MD_VERSION = `pip show pacifica-metadata | grep Version: | awk '{ print $2 }';
