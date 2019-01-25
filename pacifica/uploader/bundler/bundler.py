@@ -82,11 +82,13 @@ class Bundler(object):
         self._hashstr = hashstr
         self._done_size = 0
         self._complete = False
-        self._total_size = 0
+        # this is an estimate of the total size and is used as a divisor
+        # to determine percent complete, so small number is okay
+        self._total_size = 0.0001
 
     def _save_total_size(self):
         """Build the total size from the files and save the total."""
-        tsize = 0
+        tsize = 0.0001
         for file_data in self.file_data:
             tsize += file_data['size']
         self._total_size = tsize
