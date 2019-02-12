@@ -138,6 +138,7 @@ class MetaObj(_MetaObj):
 FILE_KEYS = [
     'destinationTable',
     'name',
+    'source',
     'subdir',
     'size',
     'hashtype',
