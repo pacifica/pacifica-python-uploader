@@ -28,6 +28,16 @@ class TestMetaData(TestCase):
         meta_str = metadata_encode(md_obj)
         self.assertTrue(meta_str == '[{"destinationTable": "blarg"}]')
 
+    def test_encoding_plus_extras(self):
+        """Test the metadata encoding with simple example."""
+        md_obj = MetaData([MetaObj(destinationTable='blarg'), {'foo': 'bar'}])
+        hit_exception = False
+        try:
+            metadata_encode(md_obj)
+        except TypeError:
+            hit_exception = True
+        self.assertTrue(hit_exception)
+
     def test_encoding_with_error(self):
         """Test the metadata encoding with error."""
         hit_exception = False

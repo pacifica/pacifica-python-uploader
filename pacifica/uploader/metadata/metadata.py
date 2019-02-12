@@ -190,7 +190,7 @@ class MetaDataEncoder(json.JSONEncoder):
             json_parts = []
             for mobj in o:
                 if not hasattr(mobj, 'destinationTable'):
-                    return json.JSONEncoder.default(self, o)
+                    return json.JSONEncoder.default(self, mobj)
                 encoder_class = FileObjEncoder if mobj.destinationTable == 'Files' else MetaObjEncoder
                 json_parts.append(json.loads(
                     json.dumps(mobj, cls=encoder_class)))
