@@ -31,7 +31,7 @@ class TestUploader(TestCase):
                 [
                     MetaObj(destinationTable='Transactions._id', value=1234),
                     MetaObj(destinationTable='Transactions.submitter', value=10),
-                    MetaObj(destinationTable='Transactions.proposal',
+                    MetaObj(destinationTable='Transactions.project',
                             value=u'1234a'),
                     MetaObj(destinationTable='Transactions.instrument', value=54)
                 ]

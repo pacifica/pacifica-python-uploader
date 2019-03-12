@@ -48,7 +48,7 @@ class TestPolicyQuery(TestCase):
         policyquery = PolicyQuery(user=10)
         md_obj = metadata_decode("""[
             { "destinationTable": "Transactions.submitter", "value": 10 },
-            { "destinationTable": "Transactions.proposal", "value": "1234a" },
+            { "destinationTable": "Transactions.project", "value": "1234a" },
             { "destinationTable": "Transactions.instrument", "value": 54 }
         ]""")
         result = policyquery.valid_metadata(md_obj)

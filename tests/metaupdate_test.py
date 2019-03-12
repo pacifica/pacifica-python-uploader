@@ -81,50 +81,50 @@ class TestMetaUpdate(TestCase):
         )
         md_update.append(
             MetaObj(
-                destinationTable='Transactions.proposal',
+                destinationTable='Transactions.project',
                 displayFormat='%(_id)s %(title)s',
-                displayTitle='Proposal',
+                displayTitle='Project',
                 displayType='select',
-                metaID='ProposalByInstrument',
+                metaID='ProjectByInstrument',
                 queryDependency={'instrument_id': 'instrumentByID'},
                 queryFields=['title', '_id'],
-                sourceTable='proposals',
+                sourceTable='projects',
                 value=None,
                 valueField='_id'
             )
         )
         md_update.append(
             MetaObj(
-                displayFormat=u'Proposal ID {_id}',
+                displayFormat=u'Project ID {_id}',
                 directoryOrder=0,
                 displayType='directoryTree',
-                metaID='ProposalIDDirectory',
-                queryDependency={'_id': 'ProposalByInstrument'},
+                metaID='ProjectIDDirectory',
+                queryDependency={'_id': 'ProjectByInstrument'},
                 queryFields=['_id'],
-                sourceTable='proposals',
+                sourceTable='projects',
                 value=None,
                 valueField='_id'
             )
         )
         md_update.append(
             MetaObj(
-                displayFormat=u'Proposal Title ({title})',
+                displayFormat=u'Project Title ({title})',
                 directoryOrder=1,
                 displayType='directoryTree',
-                metaID='ProposalTitleDirectory',
-                queryDependency={'_id': 'ProposalByInstrument'},
+                metaID='ProjectTitleDirectory',
+                queryDependency={'_id': 'ProjectByInstrument'},
                 queryFields=['_id', 'title'],
-                sourceTable='proposals',
+                sourceTable='projects',
                 value=None,
                 valueField='_id'
             )
         )
-        md_update.update_parents('ProposalIDDirectory')
-        md_update.update_parents('ProposalTitleDirectory')
-        self.assertTrue(md_update['ProposalByInstrument'].value)
-        self.assertEqual(md_update['ProposalIDDirectory'].value, u'1234a')
+        md_update.update_parents('ProjectIDDirectory')
+        md_update.update_parents('ProjectTitleDirectory')
+        self.assertTrue(md_update['ProjectByInstrument'].value)
+        self.assertEqual(md_update['ProjectIDDirectory'].value, u'1234a')
         self.assertEqual(
             md_update.directory_prefix(),
-            u'Proposal ID 1234a/Proposal Title (Pacifica D\xe9velopment (active no close))'
+            u'Project ID 1234a/Project Title (Pacifica D\xe9velopment (active no close))'
         )
         self.assertTrue(md_update.is_valid())

@@ -60,19 +60,19 @@
       "valueField": "_id"
     },
     {
-      "destinationTable": "Transactions.proposal",
+      "destinationTable": "Transactions.project",
       "displayFormat": "%(_id)s %(title)s",
-      "displayTitle": "Proposal",
+      "displayTitle": "Project",
       "displayType": "select",
-      "metaID": "ProposalByInstrument",
+      "metaID": "ProjectByInstrument",
       "queryDependency": {
-        "_id": "ProposalByInstrument"
+        "_id": "ProjectByInstrument"
       },
       "queryFields": [
         "_id",
         "title"
       ],
-      "sourceTable": "proposals",
+      "sourceTable": "projects",
       "value": "",
       "valueField": "_id"
     },
@@ -80,14 +80,14 @@
       "directoryOrder": 0,
       "displayFormat": "Dave is a twit %(_id)s",
       "displayType": "directoryTree",
-      "metaID": "ProposalDirectory",
+      "metaID": "ProjectDirectory",
       "queryDependency": {
-        "_id": "ProposalByInstrument"
+        "_id": "ProjectByInstrument"
       },
       "queryFields": [
         "_id"
       ],
-      "sourceTable": "proposals",
+      "sourceTable": "projects",
       "value": "45796",
       "valueField": "_id"
     },
@@ -99,7 +99,7 @@
       "key": "User of Record",
       "metaID": "EmslUserOfRecord",
       "queryDependency": {
-        "proposal_id": "ProposalByInstrument"
+        "project_id": "ProjectByInstrument"
       },
       "queryFields": [
         "first_name",
