@@ -1,14 +1,11 @@
+dist: xenial
 services:
 - postgresql
-- elasticsearch
 - rabbitmq
 addons:
   apt:
-    sources:
-    - elasticsearch-5.x
     packages:
-    - elasticsearch
-    - oracle-java8-set-default
+    - rabbitmq-server
 stages:
 - lint
 - test
@@ -25,7 +22,7 @@ cache: pip
 ".script": &4
 - pip install .
 - cd tests
-- coverage run --include='*/site-packages/pacifica/uploader/*' -m pytest -v
+- coverage run --include='*/site-packages/pacifica/uploader/*' -m pytest -xv
 - coverage report --show-missing --fail-under 100
 ".lint_script": &2
 - pre-commit run -a

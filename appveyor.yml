@@ -22,6 +22,7 @@ before_test:
 - ps: >
     $env:PATH = "$env:PGSQL_PATH\bin;$env:PATH";
     createdb pacifica_metadata;
+    createdb pacifica_ingest;
     mkdir C:\ingest;
     mkdir C:\archive;
     C:\pacifica\Scripts\activate.ps1;
@@ -38,7 +39,7 @@ before_test:
     $env:UNIQUEID_CPCONFIG = "$PWD/travis/uniqueid/server.conf";
     pacifica-uniqueid-cmd dbsync;
     Start-Process C:\pacifica\Scripts\pacifica-uniqueid.exe;
-    $env:INGEST_CONFIG = "$PWD/travis/ingest/config.cfg";
+    $env:INGEST_CONFIG = "$PWD/travis/ingest/apconfig.cfg";
     $env:INGEST_CPCONFIG = "$PWD/travis/ingest/server.conf";
     pacifica-ingest-cmd dbsync;
     Start-Process C:\pacifica\Scripts\pacifica-ingest.exe;
