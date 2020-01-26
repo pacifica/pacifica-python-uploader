@@ -16,14 +16,14 @@ setup(
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     description='Pacifica Uploader',
-    url='https://pypi.python.org/pypi/pacifica-uploader/',
+    url='https://github.com/pacifica/pacifica-python-uploader/',
     long_description=open(path.join(
         path.abspath(path.dirname(__file__)),
         'README.md')).read(),
     long_description_content_type='text/markdown',
     author='David Brown',
     author_email='david.brown@pnnl.gov',
-    packages=find_packages(),
+    packages=find_packages(include=['pacifica.*']),
     namespace_packages=['pacifica'],
     install_requires=[str(ir.req) for ir in INSTALL_REQS]
 )

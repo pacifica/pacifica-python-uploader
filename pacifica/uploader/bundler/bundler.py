@@ -13,7 +13,6 @@ from tarfile import TarInfo
 from tarfile import open as taropen
 from datetime import datetime
 from mimetypes import guess_type
-from six import PY2
 from ..metadata import FileObj, metadata_encode
 
 
@@ -29,7 +28,7 @@ class HashFileObj(object):
     def read(self, size=-1):
         """Read wrapper function."""
         buf = self.filedesc.read(size)
-        if not PY2 and not isinstance(buf, bytes):  # pragma: no cover
+        if not isinstance(buf, bytes):  # pragma: no cover
             buf = bytes(buf, 'UTF-8')
         self.hashval.update(buf)
         self.upref._done_size += len(buf)
@@ -163,8 +162,7 @@ class Bundler(object):
             tarfile.addfile(tarinfo, fileobj)
             self.md_obj.append(self._build_file_info(
                 file_data, fileobj.hashdigest()))
-        md_txt = metadata_encode(self.md_obj)
-        md_txt = md_txt if PY2 else bytes(md_txt, 'UTF-8')
+        md_txt = bytes(metadata_encode(self.md_obj), 'utf8')
         md_fd = StringIO(md_txt)
         md_tinfo = TarInfo('metadata.txt')
         md_tinfo.size = len(md_txt)

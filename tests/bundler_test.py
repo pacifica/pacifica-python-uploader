@@ -8,7 +8,6 @@ from unittest import TestCase
 from random import randint
 from tempfile import NamedTemporaryFile
 from tarfile import TarFile
-from six import PY2
 from pacifica.uploader import bundler
 from pacifica.uploader.metadata import MetaData, MetaObj
 
@@ -31,8 +30,7 @@ class BuildSampleData(object):
                 ['{}: This is the content of {}\n'.format(
                     i, file_i) for i in range(file_i)]
             )
-            byte_str = uni_str if PY2 else bytes(uni_str, 'UTF-8')
-            temp_i.write(byte_str)
+            temp_i.write(bytes(uni_str, 'utf8'))
             temp_i.close()
             self.names.append(temp_i.name)
             self.files.append({
@@ -70,8 +68,7 @@ class TestBundlerModule(TestCase):
         md_fd = check_tar.extractfile('metadata.txt')
         self.assertTrue(md_fd)
         md_bytes = md_fd.read()
-        md_str = md_bytes if PY2 else md_bytes.decode('utf8')
-        self.assertTrue(loads(md_str))
+        self.assertTrue(loads(md_bytes.decode('utf8')))
 
     def test_bundler_basic_with_cb(self):
         """Test the bundler to stream a tarfile."""
