@@ -19,21 +19,29 @@ script:
 - coverage report --show-missing --fail-under 100
 jobs:
   include:
-  - language: python
-    stage: lint
+  - stage: lint
     before_script: skip
     script:
       - pre-commit run -a
       - radon cc pacifica
-    python: 3.6
-  - language: python
-    stage: test
+  - python: 3.7
+    before_script: skip
+    script:
+      - pre-commit run -a
+      - radon cc pacifica
+  - python: 3.8
+    before_script: skip
+    script:
+      - pre-commit run -a
+      - radon cc pacifica
+  - stage: test
+  - python: 3.7
+  - python: 3.8
   - stage: deploy
     services: []
-    language: python
     before_script: skip
     script: skip
-    python: 3.6
+    python: 3.8
     deploy:
       skip_cleanup: true
       provider: pypi
