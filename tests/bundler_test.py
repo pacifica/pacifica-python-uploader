@@ -13,7 +13,7 @@ from pacifica.uploader.metadata import MetaData, MetaObj
 
 
 # pylint: disable=too-few-public-methods
-class BuildSampleData(object):
+class BuildSampleData:
     """Build a sample data set to be used in with block."""
 
     def __init__(self):
@@ -35,7 +35,7 @@ class BuildSampleData(object):
             self.names.append(temp_i.name)
             self.files.append({
                 'fileobj': open(temp_i.name, 'r'),
-                'name': 'data/data_{}/{}.txt'.format(file_i, file_i),
+                'name': 'data/data_{0}/{0}.txt'.format(file_i),
                 'size': stat(temp_i.name).st_size,
                 'mtime': stat(temp_i.name).st_mtime
             })

@@ -35,8 +35,6 @@ class PolicyQueryData(_PolicyQueryData):
     endpoint.
     """
 
-    pass
-
 
 class PolicyQuery(CommonBase):
     """

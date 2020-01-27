@@ -100,7 +100,7 @@ class MetaData(list):
 
     def is_valid(self):
         """Return true if all the values of MetaObjs are something."""
-        return set([bool(obj.value) for obj in self if isinstance(obj, MetaObj)]) == set([True])
+        return {bool(obj.value) for obj in self if isinstance(obj, MetaObj)} == {True}
 
 
 META_KEYS = [
@@ -131,8 +131,6 @@ class MetaObj(_MetaObj):
     whose representation is disjoint to a file, i.e., units of metadata that are
     describe but are not stored as part of a file.
     """
-
-    pass
 
 
 FILE_KEYS = [
@@ -165,8 +163,6 @@ class FileObj(_FileObj):
     provided by the
     `Pacifica Metadata <https://github.com/pacifica/pacifica-metadata>`_ library.
     """
-
-    pass
 
 
 def file_or_meta_obj(**json_data):

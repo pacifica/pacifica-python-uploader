@@ -16,7 +16,7 @@ from mimetypes import guess_type
 from ..metadata import FileObj, metadata_encode
 
 
-class HashFileObj(object):
+class HashFileObj:
     """File like object used for reading and hashing files."""
 
     def __init__(self, filedesc, hashval, upref):
@@ -40,7 +40,7 @@ class HashFileObj(object):
 
 
 # pylint: disable=too-few-public-methods
-class Bundler(object):
+class Bundler:
     """Class to handle bundling of files to stream a tarfile."""
 
     md_obj = None

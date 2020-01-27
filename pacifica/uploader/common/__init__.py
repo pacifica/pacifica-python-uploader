@@ -6,7 +6,7 @@ import requests
 
 
 # pylint: disable=too-few-public-methods
-class CommonBase(object):
+class CommonBase:
     """Contains methods to implement common functionality."""
 
     session = None

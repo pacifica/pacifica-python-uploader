@@ -1,16 +1,13 @@
 -r requirements.txt
-celery
-codeclimate-test-reporter
-coverage>=4.0,<4.4
+coverage
 pacifica-archiveinterface
 pacifica-ingest
 pacifica-metadata
 pacifica-policy
 pacifica-uniqueid
-peewee
 pep257
 pre-commit
-pylint<2.0
+pylint
 pytest
 radon
 recommonmark
