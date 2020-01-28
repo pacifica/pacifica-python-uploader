@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2020-01-27
+### Added
+- Pull #57 Add Python 3.7 and 3.8 by [dmlb2000](https://github.com/dmlb2000)
+- Pull #56 Update Pylint 2.0+ by [dmlb2000](https://github.com/dmlb2000)
+- Pull #55 Add Ansible to Travis by [dmlb2000](https://github.com/dmlb2000)
+- Pull #54 Remove Python 2.7 by [dmlb2000](https://github.com/dmlb2000)
+
 ## [0.2.5] - 2019-05-18
 ### Added
 - Metadata classes to manage required upload metadata
