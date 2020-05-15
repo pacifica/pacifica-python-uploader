@@ -2,52 +2,62 @@ dist: bionic
 language: python
 python: 3.6
 stages:
-- lint
-- test
-- deploy
+  - lint
+  - test
+  - test-docs
+  - deploy
 cache: pip
 install:
-- pip install -r requirements-dev.txt
+  - pip install -r requirements-dev.txt
+  - pip install .
 before_script:
-- pip install ansible
-- ansible-galaxy install pacifica.ansible_pacifica pacifica.ansible_travis
-- ansible-playbook ~/.ansible/roles/pacifica.ansible_travis/molecule/common/playbook.yml -i ~/.ansible/roles/pacifica.ansible_travis/molecule/common/inventory.yml -e "ansible_python_interpreter=/home/travis/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/python travis_virtualenv=python${TRAVIS_PYTHON_VERSION} github_repository=cli"
+  - pip install ansible
+  - ansible-galaxy install pacifica.ansible_pacifica pacifica.ansible_travis
+  - ansible-playbook ~/.ansible/roles/pacifica.ansible_travis/molecule/common/playbook.yml -i ~/.ansible/roles/pacifica.ansible_travis/molecule/common/inventory.yml -e "ansible_python_interpreter=/home/travis/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/python travis_virtualenv=python${TRAVIS_PYTHON_VERSION} github_repository=cli"
 script:
-- pip install .
-- cd tests
-- coverage run --include='*/site-packages/pacifica/uploader/*' -m pytest -xsv
-- coverage report --show-missing --fail-under 100
+  - cd tests
+  - coverage run --include='*/site-packages/pacifica/uploader/*' -m pytest -xsv
+  - coverage report --show-missing --fail-under 100
 jobs:
   include:
-  - stage: lint
-    before_script: skip
-    script:
-      - pre-commit run -a
-      - radon cc pacifica
-  - python: 3.7
-    before_script: skip
-    script:
-      - pre-commit run -a
-      - radon cc pacifica
-  - python: 3.8
-    before_script: skip
-    script:
-      - pre-commit run -a
-      - radon cc pacifica
-  - stage: test
-  - python: 3.7
-  - python: 3.8
-  - stage: deploy
-    services: []
-    before_script: skip
-    script: skip
-    python: 3.8
-    deploy:
-      skip_cleanup: true
-      provider: pypi
-      user: dmlb2000
-      distributions: sdist bdist_wheel
-      password:
-        secure: iXzIvgJaMdmFT8IJPWNs0XkUi1l2My6kRXmxnT129hrQAiCIHCfJeB898IfFFQM86kwe4p3dA/1t2+IMa4bNqpUZb6Z615MDgWxcpHzn0JMiHMjYHlj9eae/+8IBjSbjoTZPIXRJGZ2NMy5rY8/wkcsXN87J0flhwdUMX8uO5aNDLad8nVYZsU1NeWHKchx07WriFeJaRYo0aCPXRK+kzc2u8eSrOumzKSTaIPnZlknrMJ25BRA8pEhJVlRPMg0Jp+L9ugdwGNtC7o61W5e50XPYC485P0+GwWqgUz2F6NLTzAY0JYNdLgz4XdqdHrpc/lK+TKN2FE9yJq24IFxyyzO7xDPAmhAUiFYnN7URIJyaNcNYGguc668P6Ogs66MVMCLdCQsUMMVb0ok9QqVycYMoZ0h09b2A8tviOnaUVWZbE8Ur0FL3YVADq51L0FWq/Xe1+EnWOlsySyLymh/uNMbL6sHa2dJCkzzwkyFxPTyELWaUC01VQRjyjFJknkX5S0Z+SNiYSQnuFPb4HQKj7hKK4KQ31Yk3hJ2+NDWjvPzviduFHVrxHGRGzd/X1uIPyfubc85YdJn1e7XxjmhMOfxXmzHanlGGKczwatKZe50UqWXQTat2bKnKGeI24jt+ubfznfDqwnF71Lr60+UdD9Xqrqz/KGr9ldE8QbPRcHM=
-      on:
-        tags: true
+    - stage: lint
+      before_script: skip
+      script:
+        - pre-commit run -a
+        - radon cc pacifica
+    - python: 3.7
+      before_script: skip
+      script:
+        - pre-commit run -a
+        - radon cc pacifica
+    - python: 3.8
+      before_script: skip
+      script:
+        - pre-commit run -a
+        - radon cc pacifica
+    - stage: test
+    - python: 3.7
+    - python: 3.8
+    - stage: test-docs
+      python: 3.8
+      before_script: skip
+      script: >
+        cd docs;
+        sphinx-build -T -E -b readthedocs -d _build/doctrees-readthedocs -D language=en . _build/html;
+        sphinx-build -T -b readthedocssinglehtmllocalmedia -d _build/doctrees-readthedocssinglehtmllocalmedia -D language=en . _build/localmedia;
+        sphinx-build -b latex -D language=en -d _build/doctrees . _build/latex;
+        sphinx-build -T -b epub -d _build/doctrees-epub -D language=en . _build/epub
+    - stage: deploy
+      services: []
+      before_script: skip
+      script: skip
+      python: 3.8
+      deploy:
+        skip_cleanup: true
+        provider: pypi
+        user: dmlb2000
+        distributions: sdist bdist_wheel
+        password:
+          secure: iXzIvgJaMdmFT8IJPWNs0XkUi1l2My6kRXmxnT129hrQAiCIHCfJeB898IfFFQM86kwe4p3dA/1t2+IMa4bNqpUZb6Z615MDgWxcpHzn0JMiHMjYHlj9eae/+8IBjSbjoTZPIXRJGZ2NMy5rY8/wkcsXN87J0flhwdUMX8uO5aNDLad8nVYZsU1NeWHKchx07WriFeJaRYo0aCPXRK+kzc2u8eSrOumzKSTaIPnZlknrMJ25BRA8pEhJVlRPMg0Jp+L9ugdwGNtC7o61W5e50XPYC485P0+GwWqgUz2F6NLTzAY0JYNdLgz4XdqdHrpc/lK+TKN2FE9yJq24IFxyyzO7xDPAmhAUiFYnN7URIJyaNcNYGguc668P6Ogs66MVMCLdCQsUMMVb0ok9QqVycYMoZ0h09b2A8tviOnaUVWZbE8Ur0FL3YVADq51L0FWq/Xe1+EnWOlsySyLymh/uNMbL6sHa2dJCkzzwkyFxPTyELWaUC01VQRjyjFJknkX5S0Z+SNiYSQnuFPb4HQKj7hKK4KQ31Yk3hJ2+NDWjvPzviduFHVrxHGRGzd/X1uIPyfubc85YdJn1e7XxjmhMOfxXmzHanlGGKczwatKZe50UqWXQTat2bKnKGeI24jt+ubfznfDqwnF71Lr60+UdD9Xqrqz/KGr9ldE8QbPRcHM=
+        on:
+          tags: true
