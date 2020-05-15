@@ -14,6 +14,7 @@ class TestPolicyQuery(TestCase):
         """Test the constructor for PolicyQuery."""
         policyquery = PolicyQuery('dmlb2001')
         self.assertTrue(policyquery)
+        self.assertEqual(policyquery.get_user(), 10)
 
     def test_pq_json(self):
         """Test converting the PolicyQuery to json."""
