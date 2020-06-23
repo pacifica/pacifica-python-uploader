@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 """Module used to test the MetaUpdate module."""
 from unittest import TestCase
+from copy import deepcopy
 from pacifica.uploader.metadata.metaupdate import MetaUpdate
-from pacifica.uploader.metadata.metadata import MetaObj
+from pacifica.uploader.metadata.metadata import MetaObj, metadata_decode
 
 
 class TestMetaUpdate(TestCase):
@@ -128,3 +129,14 @@ class TestMetaUpdate(TestCase):
             u'Project ID 1234a/Project Title (Pacifica D\xe9velopment (active no close))'
         )
         self.assertTrue(md_update.is_valid())
+
+    def test_copy_exclude_auth(self):
+        """Test the metadata module for interface."""
+        metadata_str = open('test_data/up-metadata.json').read()
+        metaupdate = MetaUpdate('bjohn', metadata_decode(metadata_str))
+        metaucopy = deepcopy(metaupdate)
+        # pylint: disable=protected-access
+        self.assertEqual(
+            id(metaupdate._auth), id(metaucopy._auth),
+            'ID for auth object should be the same for deepcopies.'
+        )

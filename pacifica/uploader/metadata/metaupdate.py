@@ -12,6 +12,14 @@ from .metadata import MetaData
 from .policyquery import PolicyQuery
 
 
+class _NoCopyDict(dict):
+    """A dictionary that shouldn't be copied."""
+
+    def __deepcopy__(self, _memo):
+        """Don't deep copy the dictionary."""
+        return self
+
+
 class MetaUpdate(MetaData):
     """
     Class to update the MetaData object.
@@ -24,7 +32,8 @@ class MetaUpdate(MetaData):
 
     def __init__(self, user, *args, **kwargs):
         """Pull the user from the arguments so we can use that for policy queries."""
-        self._auth = kwargs.pop('auth', {})
+        self._auth = _NoCopyDict()
+        self._auth.update(kwargs.pop('auth', {}))
         super(MetaUpdate, self).__init__(*args, **kwargs)
         self._user = user
 
